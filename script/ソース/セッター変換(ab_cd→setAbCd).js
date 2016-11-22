@@ -1,0 +1,1 @@
+textArea.setText(com.uchicom.editor.util.TextUtil.getSetterText(text));

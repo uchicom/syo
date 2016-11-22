@@ -1,0 +1,1 @@
+textArea.setText("ようこそ!");
