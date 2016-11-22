@@ -69,9 +69,7 @@ public class ScriptAction extends AbstractAction {
 		}
 		try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "utf-8")) {
 			se.put("name",  getValue(NAME));
-			if (param != null) {
-				se.put("param", param);
-			}
+			se.put("param", param);
 			se.put("properties", properties);
 			se.put("selectionStart", textArea.getSelectionStart());
 			se.put("selectionEnd", textArea.getSelectionEnd());
