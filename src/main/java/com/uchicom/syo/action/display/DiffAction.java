@@ -75,21 +75,15 @@ public class DiffAction extends AbstractResourceAction {
 			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較先のファイル検索でエラーが発生しました。\n" + e.getMessage());
 			return;
 		}
-		System.out.println(file1Map);
-		System.out.println(file2Map);
 		Set<String> file1Set = file1Map.keySet();
 		Set<String> file1Set2 = new HashSet<>(file1Set);
 		Set<String> file1Set3 = new HashSet<>(file1Set);
-		System.out.println(file1Set);
 		Set<String> file2Set = file2Map.keySet();
 		Set<String> file2Set2 = new HashSet<>(file2Set);
-		System.out.println(file2Set);
 		file1Set2.removeAll(file2Set);
-		System.out.println(file1Set);
 		file1Set2.removeIf((a) -> {
 			return a.contains("svn") || a.contains("bin") || a.contains("classes");
 		});
-		System.out.println(file1Set);
 		StringBuffer strBuff = new StringBuffer();
 		strBuff.append("比較元:");
 		try {
@@ -124,10 +118,7 @@ public class DiffAction extends AbstractResourceAction {
 		});
 
 		strBuff.append("\n両方に存在するが差分あり\n");
-		System.out.println(file1Set);
-		System.out.println(file2Set);
 		file1Set3.retainAll(file2Set);
-		System.out.println(file1Set);
 
 		file1Set3.removeIf((a) -> {
 			return a.contains("svn") || a.contains("bin") || a.contains("classes");
@@ -198,11 +189,9 @@ public class DiffAction extends AbstractResourceAction {
 			int length2 = 0;
 			while ((length1 = fis1.read(bytes1)) > 0) {
 				int index = 0;
-				System.out.println("l1:" + length1);
 				while (index < length1) {
 					length2 = fis2.read(bytes2, index, length1 - index);
 					index += length2;
-					System.out.println("l2:" + length2);
 				}
 				if (!Arrays.equals(Arrays.copyOf(bytes1, index), Arrays.copyOf(bytes2, index))) {
 					return false;
