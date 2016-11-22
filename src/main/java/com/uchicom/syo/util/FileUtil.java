@@ -1,4 +1,4 @@
-/* (c) 2015 uchicom */
+// (c) 2015 uchicom
 package com.uchicom.syo.util;
 
 import java.io.ByteArrayOutputStream;

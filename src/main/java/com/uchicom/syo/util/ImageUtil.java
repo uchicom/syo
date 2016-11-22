@@ -1,6 +1,4 @@
-/**
- * (c) 2016 uchicom
- */
+// (c) 2016 uchicom
 package com.uchicom.syo.util;
 
 import javax.swing.ImageIcon;

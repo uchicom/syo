@@ -1,4 +1,4 @@
-/* (c) 2015 uchicom */
+// (c) 2015 uchicom
 package com.uchicom.syo.action.help;
 
 import java.awt.Desktop;
@@ -21,7 +21,7 @@ public class HelpAction extends AbstractResourceAction {
 		Desktop desktop = Desktop.getDesktop();
 
 		try {
-			desktop.browse(new URI("http://labs.uchicom.com"));
+			desktop.browse(new URI("http://labs.uchicom.com/help/syo/"));
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		} catch (URISyntaxException e2) {

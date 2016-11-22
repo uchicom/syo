@@ -1,6 +1,6 @@
+// (c) 2015 uchicom
 package com.uchicom.syo.util;
 
-/* (c) 2015 uchicom */
 public class TextUtil {
 
 	public static String getConvertText(String text) {

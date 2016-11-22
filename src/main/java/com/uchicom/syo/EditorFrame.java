@@ -1,3 +1,4 @@
+// (c) 2015 uchicom
 package com.uchicom.syo;
 
 import java.awt.BorderLayout;
