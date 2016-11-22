@@ -436,41 +436,49 @@ public class EditorFrame extends JFrame implements UIStore, ClipboardOwner {
 					if (child.charAt(0) == '[' && child.charAt(child.length() - 1) == ']') {
 						String special = child.substring(1, child.length() -1);
 						if (special.length() == 0) continue;
-						//ラインセパレータ
-						if ("-".equals(special)) {
-							menu.addSeparator();
-							continue;
-						}
-						//スクリプト処理
-						if ("*".equals(special)) {
-							File scriptDir = new File("script");
-							if (scriptDir.exists()) {
-								try {
-									setScriptMenu(scriptDir, menu);
-								} catch (IOException e) {
-									// TODO 自動生成された catch ブロック
-									e.printStackTrace();
-								}
-							} else {
-								scriptDir.mkdir();
+						if (special.length() == 1) {
+							//ラインセパレータ
+							if ("-".equals(special)) {
+								menu.addSeparator();
+								continue;
 							}
-							continue;
+							//スクリプト処理
+							if ("*".equals(special)) {
+								File scriptDir = new File("script");
+								if (scriptDir.exists()) {
+									try {
+										setScriptMenu(scriptDir, menu);
+									} catch (IOException e) {
+										// TODO 自動生成された catch ブロック
+										e.printStackTrace();
+									}
+								} else {
+									scriptDir.mkdir();
+								}
+								continue;
+							}
+						}
+						String scriptName = null;
+						int nameIndex = special.indexOf(':');
+						if (nameIndex > 0) {
+							scriptName = special.substring(nameIndex + 1);
+							special = special.substring(0, nameIndex);
 						}
 						String scriptKey = key + "." + special;
 						if (menuResource.containsKey(scriptKey)) {
 							String scriptPath = menuResource.getProperty(scriptKey);
 							if (scriptPath == null) continue;
-							int lastIndex = scriptPath.lastIndexOf('[');
-							String[] params = null;
+							int index = scriptPath.indexOf(':');
+							String param = null;
 							File scriptFile = null;
-							if (scriptPath.charAt(scriptPath.length() - 1) == ']' && lastIndex > 0) {
-								params = scriptPath.substring(lastIndex + 1, scriptPath.length() - 1).split(",");
-								scriptFile = new File(scriptPath.substring(0, lastIndex));
+							if (index > 0) {
+								param = scriptPath.substring(index + 1);
+								scriptFile = new File(scriptPath.substring(0, index));
 							} else {
 								scriptFile = new File(scriptPath);
 							}
 							try {
-								createScriptMenu(scriptFile, menu, params);
+								createScriptMenu(scriptFile, menu, scriptName, param);
 							} catch (IOException e) {
 								// TODO 自動生成された catch ブロック
 								e.printStackTrace();
@@ -516,19 +524,24 @@ public class EditorFrame extends JFrame implements UIStore, ClipboardOwner {
 		}
 		return action;
 	}
-	private Action createScriptAction(File file, String[] params) throws IOException {
+	private Action createScriptAction(File file, String name, String param) throws IOException {
+		if (file.getName().contains("[h]")) {
+			return null;
+		}
 		StringBuffer keyBuff = new StringBuffer();
 		keyBuff.append(file.getCanonicalPath());
-		if (params != null) {
-		for (String param : params) {
-			keyBuff.append(" ");
+		if (name != null) {
+			keyBuff.append(":");
 			keyBuff.append(param);
 		}
+		if (param != null) {
+			keyBuff.append(" ");
+			keyBuff.append(param);
 		}
 		String key = keyBuff.toString();
 		Action action = actionMap.get(key);
 		if (action == null) {
-			action = new ScriptAction(this, file, params);
+			action = new ScriptAction(this, file, name, param);
 			actionMap.put(key, action);
 		}
 		return action;
@@ -585,21 +598,23 @@ public class EditorFrame extends JFrame implements UIStore, ClipboardOwner {
 
 	private void setScriptMenu(File dir, JMenu menu) throws IOException {
 		for (File file : dir.listFiles()) {
-			createScriptMenu(file, menu, null);
+			createScriptMenu(file, menu, null, null);
 		}
 	}
-	public void createScriptMenu(File file, JMenu menu, String[] params) throws IOException {
+	public void createScriptMenu(File file, JMenu menu, String name, String param) throws IOException {
 
 		if (file.exists()) {
-			Action action = createScriptAction(file, params);
-			initSelected(file, action);
-			if (file.isDirectory()) {
-				JMenu childMenu = new JMenu(action);
-				setScriptMenu(file, childMenu);
-				menu.add(childMenu);
-			} else {
-				initButton(file, action);
-				menu.add(new JMenuItem(action));
+			Action action = createScriptAction(file, name, param);
+			if (action != null) {
+				initSelected(file, action);
+				if (file.isDirectory()) {
+					JMenu childMenu = new JMenu(action);
+					setScriptMenu(file, childMenu);
+					menu.add(childMenu);
+				} else {
+					initButton(file, action);
+					menu.add(new JMenuItem(action));
+				}
 			}
 		}
 	}

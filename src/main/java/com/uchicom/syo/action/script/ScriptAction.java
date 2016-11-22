@@ -26,21 +26,20 @@ public class ScriptAction extends AbstractAction {
 
 	private File file;
 	private UIStore uiStore;
-	private String[] params;
+	private String param;
 
-	public ScriptAction(UIStore uiStore) {
-		this(uiStore,new File(uiStore.getActionResource().getProperty(ScriptAction.class.getCanonicalName() + ".FILE")) , null);
-	}
-
-	public ScriptAction(UIStore uiStore, File file, String[] params) {
+	public ScriptAction(UIStore uiStore, File file, String name, String param) {
 		this.file = file;
 		this.uiStore = uiStore;
-		this.params = params;
-		String name = file.getName();
-		if (name.contains("[i]")) {
+		this.param = param;
+		String fileName = file.getName();
+		if (fileName.contains("[i]")) {
 			actionPerformed(null);
 		}
-		putValue(NAME, name.replaceAll("\\[.*\\]|\\..*", ""));
+		if (name == null) {
+			name = fileName.replaceAll("\\[.*\\]|\\..*", "");
+		}
+		putValue(NAME, name);
 	}
 
 	@Override
@@ -69,8 +68,9 @@ public class ScriptAction extends AbstractAction {
 			}
 		}
 		try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "utf-8")) {
-			if (params != null) {
-				se.put("params", params);
+			se.put("name",  getValue(NAME));
+			if (param != null) {
+				se.put("param", param);
 			}
 			se.put("properties", properties);
 			se.put("selectionStart", textArea.getSelectionStart());
