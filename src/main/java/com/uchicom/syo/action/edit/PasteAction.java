@@ -3,17 +3,19 @@ package com.uchicom.syo.action.edit;
 
 import java.awt.event.ActionEvent;
 
-import com.uchicom.syo.util.UIStore;
+import javax.swing.JTextArea;
+
+import com.uchicom.ui.util.UIStore;
 
 public class PasteAction extends AbstractDoAction {
 
-	public PasteAction(UIStore uiStore) {
+	public PasteAction(UIStore<JTextArea> uiStore) {
 		super(uiStore, "paste");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		uiStore.getTextArea().paste();
+		uiStore.getMainComponent().paste();
 	}
 
 }

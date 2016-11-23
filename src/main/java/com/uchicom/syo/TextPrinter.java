@@ -8,13 +8,13 @@ import java.awt.print.PrinterException;
 
 import javax.swing.JTextArea;
 
-import com.uchicom.syo.util.UIStore;
+import com.uchicom.ui.util.UIStore;
 
 public class TextPrinter implements Printable {
 
 	JTextArea textArea;
-	public TextPrinter(UIStore uiStore) {
-		textArea = uiStore.getTextArea();
+	public TextPrinter(UIStore<JTextArea> uiStore) {
+		textArea = uiStore.getMainComponent();
 	}
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)

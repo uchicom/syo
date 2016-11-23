@@ -3,17 +3,19 @@ package com.uchicom.syo.action.edit;
 
 import java.awt.event.ActionEvent;
 
-import com.uchicom.syo.util.UIStore;
+import javax.swing.JTextArea;
+
+import com.uchicom.ui.util.UIStore;
 
 public class CutAction extends AbstractDoAction {
 
-	public CutAction(UIStore uiStore) {
+	public CutAction(UIStore<JTextArea> uiStore) {
 		super(uiStore, "cut");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		uiStore.getTextArea().cut();
+		uiStore.getMainComponent().cut();
 	}
 
 }

@@ -4,13 +4,14 @@ package com.uchicom.syo.action.help;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import com.uchicom.syo.Constants;
-import com.uchicom.syo.action.AbstractResourceAction;
-import com.uchicom.syo.util.UIStore;
+import com.uchicom.ui.action.AbstractResourceAction;
+import com.uchicom.ui.util.UIStore;
 
-public class VersionAction extends AbstractResourceAction {
-    public VersionAction(UIStore uiStore) {
+public class VersionAction extends AbstractResourceAction<JTextArea> {
+    public VersionAction(UIStore<JTextArea> uiStore) {
     	super(uiStore);
     }
 	@Override

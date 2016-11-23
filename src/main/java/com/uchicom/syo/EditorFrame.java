@@ -2,7 +2,6 @@
 package com.uchicom.syo;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
@@ -52,14 +51,14 @@ import com.uchicom.syo.action.script.ScriptAction;
 import com.uchicom.syo.util.FileUtil;
 import com.uchicom.syo.util.ImageUtil;
 import com.uchicom.syo.util.LineNumberView;
-import com.uchicom.syo.util.UIStore;
+import com.uchicom.ui.util.UIStore;
 
 /**
  * テキストエディタ.
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class EditorFrame extends JFrame implements UIStore, ClipboardOwner {
+public class EditorFrame extends JFrame implements UIStore<JTextArea>, ClipboardOwner {
 
 	private JTextArea textArea = new JTextArea();
 	private UndoManager undoManager = new UndoManager();
@@ -216,7 +215,6 @@ public class EditorFrame extends JFrame implements UIStore, ClipboardOwner {
 								textArea.insert(value,
 										textArea.getCaretPosition());
 							}
-							System.out.println(value);
 						} catch (UnsupportedFlavorException e) {
 							// TODO 自動生成された catch ブロック
 							e.printStackTrace();
@@ -657,14 +655,10 @@ public class EditorFrame extends JFrame implements UIStore, ClipboardOwner {
 		panel.add(button);
 	}
 
-	@Override
-	public JTextArea getTextArea() {
-		return textArea;
-	}
 
 	@Override
-	public Component getMainComponent() {
-		return this;
+	public JTextArea getMainComponent() {
+		return textArea;
 	}
 
 	@Override

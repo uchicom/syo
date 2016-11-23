@@ -3,17 +3,19 @@ package com.uchicom.syo.action.edit;
 
 import java.awt.event.ActionEvent;
 
-import com.uchicom.syo.util.UIStore;
+import javax.swing.JTextArea;
+
+import com.uchicom.ui.util.UIStore;
 
 public class CopyAction extends AbstractDoAction {
 
-	public CopyAction(UIStore uiStore) {
+	public CopyAction(UIStore<JTextArea> uiStore) {
 		super(uiStore, "copy");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		uiStore.getTextArea().copy();
+		uiStore.getMainComponent().copy();
 	}
 
 }

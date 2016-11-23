@@ -10,19 +10,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-import com.uchicom.syo.action.AbstractResourceAction;
-import com.uchicom.syo.util.UIStore;
+import com.uchicom.ui.action.AbstractResourceAction;
+import com.uchicom.ui.util.UIStore;
 
 /**
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class CsvViewDisplayAction extends AbstractResourceAction {
+public class CsvViewDisplayAction extends AbstractResourceAction<JTextArea> {
 
 	/**
 	 * @param uiStore
 	 */
-	public CsvViewDisplayAction(UIStore uiStore) {
+	public CsvViewDisplayAction(UIStore<JTextArea> uiStore) {
 		super(uiStore);
 	}
 
@@ -31,7 +31,7 @@ public class CsvViewDisplayAction extends AbstractResourceAction {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JTextArea textArea = uiStore.getTextArea();
+		JTextArea textArea = uiStore.getMainComponent();
 		String input = JOptionPane.showInputDialog(uiStore.getMainComponent(), "列分割する区切り文字を正規表現で指定してください。", "正規表現入力", JOptionPane.INFORMATION_MESSAGE);
 		if (input != null && !"".equals(input)) {
 			String text = textArea.getText();

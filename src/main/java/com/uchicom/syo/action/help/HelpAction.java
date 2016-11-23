@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import com.uchicom.syo.action.AbstractResourceAction;
-import com.uchicom.syo.util.UIStore;
+import javax.swing.JTextArea;
 
-public class HelpAction extends AbstractResourceAction {
+import com.uchicom.ui.action.AbstractResourceAction;
+import com.uchicom.ui.util.UIStore;
 
-	public HelpAction(UIStore uiStore) {
+public class HelpAction extends AbstractResourceAction<JTextArea> {
+
+	public HelpAction(UIStore<JTextArea> uiStore) {
 		super(uiStore);
 	}
 

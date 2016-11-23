@@ -5,13 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
+import javax.swing.JTextArea;
+
 import com.uchicom.syo.TextPrinter;
-import com.uchicom.syo.action.AbstractResourceAction;
-import com.uchicom.syo.util.UIStore;
+import com.uchicom.ui.action.AbstractResourceAction;
+import com.uchicom.ui.util.UIStore;
 
-public class PrintAction extends AbstractResourceAction {
+public class PrintAction extends AbstractResourceAction<JTextArea> {
 
-	public PrintAction(UIStore uiStore) {
+	public PrintAction(UIStore<JTextArea> uiStore) {
 		super(uiStore);
 	}
 
@@ -21,7 +23,7 @@ public class PrintAction extends AbstractResourceAction {
 		job.setPrintable(new TextPrinter(uiStore));
 
 		boolean doPrint = job.printDialog();
-		System.out.println(doPrint);
+//		System.out.println(doPrint);
 		if (doPrint) {
 		    try {
 		        job.print();

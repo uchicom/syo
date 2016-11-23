@@ -8,16 +8,15 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.undo.UndoManager;
 
-import com.uchicom.syo.action.AbstractResourceAction;
-import com.uchicom.syo.util.UIStore;
-
-public abstract class AbstractDoAction extends AbstractResourceAction {
+import com.uchicom.ui.action.AbstractResourceAction;
+import com.uchicom.ui.util.UIStore;
+public abstract class AbstractDoAction extends AbstractResourceAction<JTextArea> {
 
 	UndoManager undoManager;
 
-	public AbstractDoAction(UIStore uiStore, String key) {
+	public AbstractDoAction(UIStore<JTextArea> uiStore, String key) {
 		super(uiStore);
-		JTextArea textArea = uiStore.getTextArea();
+		JTextArea textArea = uiStore.getMainComponent();
 		ActionMap actionMap = textArea.getActionMap();
 		InputMap inputMap = textArea.getInputMap();
 		if (actionMap.get(key) == null) {

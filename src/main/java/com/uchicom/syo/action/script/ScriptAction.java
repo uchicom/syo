@@ -15,7 +15,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-import com.uchicom.syo.util.UIStore;
+import com.uchicom.ui.util.UIStore;
 
 /**
  * スクリプトを実行するアクション.
@@ -25,10 +25,10 @@ import com.uchicom.syo.util.UIStore;
 public class ScriptAction extends AbstractAction {
 
 	private File file;
-	private UIStore uiStore;
+	private UIStore<JTextArea> uiStore;
 	private String param;
 
-	public ScriptAction(UIStore uiStore, File file, String name, String param) {
+	public ScriptAction(UIStore<JTextArea> uiStore, File file, String name, String param) {
 		this.file = file;
 		this.uiStore = uiStore;
 		this.param = param;
@@ -49,7 +49,7 @@ public class ScriptAction extends AbstractAction {
 
 		// JavaScriptのScriptEngineを取得する
 		ScriptEngine se = sem.getEngineByName("JavaScript");
-		JTextArea textArea = uiStore.getTextArea();
+		JTextArea textArea = uiStore.getMainComponent();
 		File propertiesDir = new File("./properties");
 		if (!propertiesDir.exists()) {
 			propertiesDir.mkdir();
