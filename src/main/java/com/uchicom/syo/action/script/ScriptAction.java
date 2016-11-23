@@ -1,6 +1,7 @@
 // (c) 2015 uchicom
 package com.uchicom.syo.action.script;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +16,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.util.UIStore;
 
 /**
@@ -25,10 +27,10 @@ import com.uchicom.ui.util.UIStore;
 public class ScriptAction extends AbstractAction {
 
 	private File file;
-	private UIStore<JTextArea> uiStore;
+	private UIStore<EditorFrame> uiStore;
 	private String param;
 
-	public ScriptAction(UIStore<JTextArea> uiStore, File file, String name, String param) {
+	public ScriptAction(UIStore<EditorFrame> uiStore, File file, String name, String param) {
 		this.file = file;
 		this.uiStore = uiStore;
 		this.param = param;
@@ -49,7 +51,7 @@ public class ScriptAction extends AbstractAction {
 
 		// JavaScriptのScriptEngineを取得する
 		ScriptEngine se = sem.getEngineByName("JavaScript");
-		JTextArea textArea = uiStore.getMainComponent();
+		JTextArea textArea = uiStore.getMainComponent().getTextArea();
 		File propertiesDir = new File("./properties");
 		if (!propertiesDir.exists()) {
 			propertiesDir.mkdir();
@@ -78,7 +80,7 @@ public class ScriptAction extends AbstractAction {
 			se.put("textArea", textArea);
 			se.eval(reader);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(textArea, e.toString());
+			JOptionPane.showMessageDialog((Component)uiStore, e.toString());
 		}
 		//プロパティの保存
 		if (properties.isEmpty()) {

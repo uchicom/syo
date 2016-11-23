@@ -9,15 +9,16 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
-public class SaveAction extends AbstractResourceAction<JTextArea> {
+public class SaveAction extends AbstractResourceAction<EditorFrame> {
 
 	private JTextArea textArea;
-	public SaveAction(UIStore<JTextArea> uiStore) {
+	public SaveAction(UIStore<EditorFrame> uiStore) {
 	    super(uiStore);
-	    textArea = uiStore.getMainComponent();
+	    textArea = uiStore.getMainComponent().getTextArea();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {

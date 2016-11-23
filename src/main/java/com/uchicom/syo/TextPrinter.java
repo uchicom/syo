@@ -13,8 +13,8 @@ import com.uchicom.ui.util.UIStore;
 public class TextPrinter implements Printable {
 
 	JTextArea textArea;
-	public TextPrinter(UIStore<JTextArea> uiStore) {
-		textArea = uiStore.getMainComponent();
+	public TextPrinter(UIStore<EditorFrame> uiStore) {
+		textArea = uiStore.getMainComponent().getTextArea();
 	}
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)

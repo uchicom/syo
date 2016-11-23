@@ -15,8 +15,8 @@ import java.util.Set;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
@@ -24,12 +24,12 @@ import com.uchicom.ui.util.UIStore;
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class DiffAction extends AbstractResourceAction<JTextArea> {
+public class DiffAction extends AbstractResourceAction<EditorFrame> {
 
 	/**
 	 * @param uiStore
 	 */
-	public DiffAction(UIStore<JTextArea> uiStore) {
+	public DiffAction(UIStore<EditorFrame> uiStore) {
 		super(uiStore);
 	}
 
@@ -38,7 +38,7 @@ public class DiffAction extends AbstractResourceAction<JTextArea> {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		uiStore.getMainComponent().setText("");
+		uiStore.getMainComponent().getTextArea().setText("");
 		JFileChooser chooser1 = new JFileChooser("比較元を選択してください。");
 		chooser1.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser1.showOpenDialog(uiStore.getMainComponent());
@@ -149,7 +149,7 @@ public class DiffAction extends AbstractResourceAction<JTextArea> {
 		});
 
 		strBuff.append("\nsvnやbin,classesを含むものは除外しています\n");
-		uiStore.getMainComponent().setText(strBuff.toString());
+		uiStore.getMainComponent().getTextArea().setText(strBuff.toString());
 
 	}
 

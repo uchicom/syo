@@ -3,9 +3,8 @@ package com.uchicom.syo.action.file;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextArea;
-
 import com.uchicom.syo.Context;
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
@@ -14,9 +13,9 @@ import com.uchicom.ui.util.UIStore;
  * @author shigeki
  *
  */
-public class CreateAction extends AbstractResourceAction<JTextArea> {
+public class CreateAction extends AbstractResourceAction<EditorFrame> {
 
-	public CreateAction(UIStore<JTextArea> uiStore) {
+	public CreateAction(UIStore<EditorFrame> uiStore) {
 	    super(uiStore);
 	}
 	@Override

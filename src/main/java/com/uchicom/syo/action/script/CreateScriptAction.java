@@ -3,14 +3,13 @@ package com.uchicom.syo.action.script;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextArea;
-
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
-public class CreateScriptAction extends AbstractResourceAction<JTextArea> {
+public class CreateScriptAction extends AbstractResourceAction<EditorFrame> {
 
-	public CreateScriptAction(UIStore<JTextArea> uiStore) {
+	public CreateScriptAction(UIStore<EditorFrame> uiStore) {
         super(uiStore);
 	}
 	@Override

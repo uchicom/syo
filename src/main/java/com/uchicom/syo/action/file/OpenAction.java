@@ -17,21 +17,21 @@ import com.uchicom.ui.util.UIStore;
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class OpenAction extends AbstractResourceAction<JTextArea> {
+public class OpenAction extends AbstractResourceAction<EditorFrame> {
 
-	public OpenAction(UIStore<JTextArea> uiStore) {
+	public OpenAction(UIStore<EditorFrame> uiStore) {
 	    super(uiStore);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JTextArea textArea = uiStore.getMainComponent();
+		JTextArea textArea = uiStore.getMainComponent().getTextArea();
 		JFileChooser chooser = new JFileChooser();
 		int result = chooser.showOpenDialog(uiStore.getMainComponent());
 		if (result != JFileChooser.CANCEL_OPTION) {
 			File file = chooser.getSelectedFile();
 			textArea.setText(FileUtil.readFile(file));
 			textArea.setCaretPosition(0);
-			((EditorFrame) uiStore).setTitle(file.getName());
+			uiStore.getMainComponent().setTitle(file.getName());
 		}
 	}
 

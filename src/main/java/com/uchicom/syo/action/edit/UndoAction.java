@@ -3,13 +3,12 @@ package com.uchicom.syo.action.edit;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextArea;
-
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.util.UIStore;
 
 public class UndoAction extends AbstractDoAction {
 
-	public UndoAction(UIStore<JTextArea> uiStore) {
+	public UndoAction(UIStore<EditorFrame> uiStore) {
 		super(uiStore, "undo");
 	}
 

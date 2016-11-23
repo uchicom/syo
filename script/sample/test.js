@@ -1,1 +1,0 @@
-eval 'ようこそ[startup].js';

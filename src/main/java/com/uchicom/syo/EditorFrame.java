@@ -11,8 +11,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -58,7 +56,7 @@ import com.uchicom.ui.util.UIStore;
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class EditorFrame extends JFrame implements UIStore<JTextArea>, ClipboardOwner {
+public class EditorFrame extends JFrame implements UIStore<EditorFrame>, ClipboardOwner {
 
 	private JTextArea textArea = new JTextArea();
 	private UndoManager undoManager = new UndoManager();
@@ -75,6 +73,9 @@ public class EditorFrame extends JFrame implements UIStore<JTextArea>, Clipboard
 
 	JPopupMenu popupMenu = new JPopupMenu();
 
+	/**
+	 * 選択状態を通知するリスト.
+	 */
 	private List<Action> notifyList = new ArrayList<>();
 
 	public static final String PROP_EXT = ".properties";
@@ -301,9 +302,14 @@ public class EditorFrame extends JFrame implements UIStore<JTextArea>, Clipboard
 		}
 		menus = menuResource.getProperty("popup").split(",");
 		for (String menuProp : menus) {
-			JMenuItem menu = createMenu("popup." + menuProp);
-			if (menu == null) continue;
-			popupMenu.add(menu);
+			if (menuProp.equals("[-]")) {
+				popupMenu.addSeparator();
+			} else {
+				JMenuItem menu = createMenu("popup." + menuProp);
+				System.out.println(menu);
+				if (menu == null) continue;
+				popupMenu.add(menu);
+			}
 		}
 
 		setJMenuBar(menuBar);
@@ -338,54 +344,54 @@ public class EditorFrame extends JFrame implements UIStore<JTextArea>, Clipboard
 		} else {
 
 		}
-		textArea.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				System.out.println("c");
-
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-
-				System.out.println("b" + e.getOppositeComponent());
-
-			}
-		});
-		popupMenu.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO 自動生成されたメソッド・スタブ
-				System.out.println("aa");
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO 自動生成されたメソッド・スタブ
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO 自動生成されたメソッド・スタブ
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO 自動生成されたメソッド・スタブ
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO 自動生成されたメソッド・スタブ
-
-			}
-		});
+//		textArea.addFocusListener(new FocusListener() {
+//
+//			@Override
+//			public void focusLost(FocusEvent e) {
+//				System.out.println("c");
+//
+//			}
+//
+//			@Override
+//			public void focusGained(FocusEvent e) {
+//
+//				System.out.println("b" + e.getOppositeComponent());
+//
+//			}
+//		});
+//		popupMenu.addMouseListener(new MouseListener() {
+//
+//			@Override
+//			public void mouseReleased(MouseEvent e) {
+//				// TODO 自動生成されたメソッド・スタブ
+//				System.out.println("aa");
+//
+//			}
+//
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				// TODO 自動生成されたメソッド・スタブ
+//
+//			}
+//
+//			@Override
+//			public void mouseExited(MouseEvent e) {
+//				// TODO 自動生成されたメソッド・スタブ
+//
+//			}
+//
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				// TODO 自動生成されたメソッド・スタブ
+//
+//			}
+//
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				// TODO 自動生成されたメソッド・スタブ
+//
+//			}
+//		});
 		textArea.addMouseListener(new MouseListener(){
 
 			@Override
@@ -394,7 +400,6 @@ public class EditorFrame extends JFrame implements UIStore<JTextArea>, Clipboard
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				System.out.println("a");
 				// TODO 自動生成されたメソッド・スタブ
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					popupMenu.show(textArea, e.getX(), e.getY());
@@ -657,8 +662,8 @@ public class EditorFrame extends JFrame implements UIStore<JTextArea>, Clipboard
 
 
 	@Override
-	public JTextArea getMainComponent() {
-		return textArea;
+	public EditorFrame getMainComponent() {
+		return this;
 	}
 
 	@Override
@@ -693,5 +698,21 @@ public class EditorFrame extends JFrame implements UIStore<JTextArea>, Clipboard
 			.append(Constants.APP_NAME);
 		}
 		super.setTitle(strBuff.toString());
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public JTextArea getTextArea() {
+		return textArea;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public List<Action> getNotifyList() {
+		return notifyList;
 	}
 }

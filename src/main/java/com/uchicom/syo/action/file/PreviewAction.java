@@ -3,14 +3,13 @@ package com.uchicom.syo.action.file;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextArea;
-
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
-public class PreviewAction extends AbstractResourceAction<JTextArea> {
+public class PreviewAction extends AbstractResourceAction<EditorFrame> {
 
-	public PreviewAction(UIStore<JTextArea> uiStore) {
+	public PreviewAction(UIStore<EditorFrame> uiStore) {
 		super(uiStore);
 	}
 

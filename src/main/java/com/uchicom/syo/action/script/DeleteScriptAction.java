@@ -3,13 +3,12 @@ package com.uchicom.syo.action.script;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextArea;
-
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
-public class DeleteScriptAction extends AbstractResourceAction<JTextArea> {
-	public DeleteScriptAction(UIStore<JTextArea> uiStore) {
+public class DeleteScriptAction extends AbstractResourceAction<EditorFrame> {
+	public DeleteScriptAction(UIStore<EditorFrame> uiStore) {
         super(uiStore);
 	}
 	@Override

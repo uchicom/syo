@@ -3,8 +3,7 @@ package com.uchicom.syo.action.file;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextArea;
-
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
@@ -12,12 +11,12 @@ import com.uchicom.ui.util.UIStore;
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class ReOpenAction extends AbstractResourceAction<JTextArea> {
+public class ReOpenAction extends AbstractResourceAction<EditorFrame> {
 
 	/**
 	 * @param uiStore
 	 */
-	public ReOpenAction(UIStore<JTextArea> uiStore) {
+	public ReOpenAction(UIStore<EditorFrame> uiStore) {
 		super(uiStore);
 	}
 

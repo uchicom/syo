@@ -5,15 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
-import javax.swing.JTextArea;
-
+import com.uchicom.syo.EditorFrame;
 import com.uchicom.syo.TextPrinter;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
-public class PrintAction extends AbstractResourceAction<JTextArea> {
+public class PrintAction extends AbstractResourceAction<EditorFrame> {
 
-	public PrintAction(UIStore<JTextArea> uiStore) {
+	public PrintAction(UIStore<EditorFrame> uiStore) {
 		super(uiStore);
 	}
 
