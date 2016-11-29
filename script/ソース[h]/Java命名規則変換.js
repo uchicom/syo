@@ -10,8 +10,21 @@ for (var index in lines) {
 	}
 	var line = "";
 	for (var index2 in items) {
-		line = line + items[index2].charAt(0).toUpperCase() + items[index2].substring(1);
+		if (prefix == "var") {
+			if (index2 == 0) {
+				line = items[index2];
+			} else {
+				line = line + items[index2].charAt(0).toUpperCase() + items[index2].substring(1);
+			}
+		} else {
+			line = line + items[index2].charAt(0).toUpperCase() + items[index2].substring(1);
+		}
 	}
-	changedText = changedText + prefix + line + "\n";
+
+	if (prefix == "var") {
+		changedText = changedText + line + "\n";
+	} else {
+		changedText = changedText + prefix + line + "\n";
+	}
 }
 textArea.setText(changedText);
