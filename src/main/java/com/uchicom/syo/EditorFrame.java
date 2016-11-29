@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -63,6 +64,8 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 	private Properties menuResource = new Properties();
 	private Properties resource = new Properties();
 	private Properties config = new Properties();
+	private static final ResourceBundle resourceBundle = ResourceBundle
+			.getBundle("com.uchicom.syo.resource");
 	// ボタンの準備
 	private JPanel northPanel = new JPanel(new FlowLayout());
 	private JPanel southPanel = new JPanel(new FlowLayout());
@@ -714,5 +717,13 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 	 */
 	public List<Action> getNotifyList() {
 		return notifyList;
+	}
+
+	/* (非 Javadoc)
+	 * @see com.uchicom.ui.util.UIStore#getResourceBundle()
+	 */
+	@Override
+	public ResourceBundle getResourceBundle() {
+		return resourceBundle;
 	}
 }
