@@ -48,8 +48,8 @@ import javax.swing.undo.UndoManager;
 
 import com.uchicom.syo.action.script.ScriptAction;
 import com.uchicom.syo.util.FileUtil;
-import com.uchicom.syo.util.ImageUtil;
 import com.uchicom.syo.util.LineNumberView;
+import com.uchicom.ui.util.ImageUtil;
 import com.uchicom.ui.util.UIStore;
 
 /**
