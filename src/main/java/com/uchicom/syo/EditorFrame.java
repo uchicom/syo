@@ -4,6 +4,8 @@ package com.uchicom.syo;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -117,7 +119,6 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 		}
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		loadConf();
-
 
 		try {
 			menuResource.load(new FileInputStream("./conf/menu.properties"));
@@ -252,8 +253,8 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 								for (int i = start; i < fileList.size(); i++) {
 
 									if (!file.equals(EditorFrame.this.file)) {
-										rectangle.x += 5;
-										rectangle.y += 5;
+										rectangle.x += 26;
+										rectangle.y += 26;
 									}
 									Starter.open(file, rectangle);
 								}
@@ -345,7 +346,37 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 		if (rectangle != null) {
 			setBounds(rectangle);
 		} else {
+			if (file == null) {
+				//表示位置をずらす
+				Point p = getLocation();
+				p.x += value * 26;
+				p.y += value * 26;
+				//超えたら
+				Rectangle rec = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+				rectangle = getBounds();
+				System.out.println(rectangle);
+				if (p.x + rectangle.width < rec.width &&
+						p.y + rectangle.height < rec.height) {
+					setLocation(p);
+				} else {
+					// widthで引いて、 33 + a
+					int a=0;
+					int val = 0;
+					int count = (rec.width - rectangle.width - 66) / 26;
+					if (count > (rec.height - rectangle.height - 66) / 26) {
+						count = (rec.height - rectangle.height - 66) / 26;
+						a = (rectangle.y + rectangle.height - rec.height - 33) / 26;
+					} else {
+						a = (rectangle.x + rectangle.width - rec.width - 33) / 26;
+					}
+					count++;
 
+					val = (value - a + 1) % count;
+					p.x = 33 + 26 * val;
+					p.y = 33 + 26 * val;
+					setLocation(p);
+				}
+			}
 		}
 //		textArea.addFocusListener(new FocusListener() {
 //
