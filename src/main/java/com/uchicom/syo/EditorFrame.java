@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -123,20 +125,16 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 		try {
 			menuResource.load(new FileInputStream("./conf/menu.properties"));
 		} catch (FileNotFoundException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 
 		try {
 			resource.load(new FileInputStream("./conf/resource.properties"));
 		} catch (FileNotFoundException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 
@@ -694,6 +692,51 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 		panel.add(button);
 	}
 
+	/**
+	 * 上書き保存
+	 */
+	public void overwrite() {
+		if (file != null && file.exists()) {
+			try (FileOutputStream fos = new FileOutputStream(file);) {
+				fos.write(textArea.getText().getBytes());
+				fos.flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} else {
+			save();
+		}
+
+	}
+	/**
+	 * 名前を付けて保存
+	 */
+	public void save() {
+		JFileChooser chooser = new JFileChooser();
+		int result = chooser.showSaveDialog(textArea);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File selectFile = chooser.getSelectedFile();
+			if (selectFile.exists()) {
+				//JOptionPane.showOptionDialog(textArea, "ファイルが存在します.上書きしますか?", "上書き確認", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane., ImageIcon., options, initialValue)
+			}
+
+			try (FileOutputStream fos = new FileOutputStream(selectFile);) {
+				fos.write(textArea.getText().getBytes());
+				fos.flush();
+
+				setFile(selectFile);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+		}
+
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+		setTitle(file.getName());
+	}
 
 	@Override
 	public EditorFrame getMainComponent() {
