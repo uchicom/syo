@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -241,7 +242,7 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 								File file = fileList.get(0);
 								int start = 0;
 								if (textArea.getText().length() == 0) {
-									textArea.setText(FileUtil.readFile(file));
+									textArea.setText(FileUtil.readFile(file, getCharset()));
 									textArea.setCaretPosition(0);
 									start = 1;
 									setTitle(file.getName());
@@ -336,9 +337,13 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 		textArea.getFont();
 		// ファイル読み込み
 		if (file != null) {
-			textArea.setText(FileUtil.readFile(file));
-			textArea.setCaretPosition(0);
-			setTitle(file.getName() + " - " + Constants.APP_NAME);
+			try {
+				textArea.setText(FileUtil.readFile(file, getCharset()));
+				textArea.setCaretPosition(0);
+				setTitle(file.getName() + " - " + Constants.APP_NAME);
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
 		}
 		pack();
 		if (rectangle != null) {
@@ -799,5 +804,9 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 	@Override
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
+	}
+
+	public String getCharset() {
+		return config.getProperty("charset");
 	}
 }

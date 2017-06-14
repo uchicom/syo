@@ -3,6 +3,7 @@ package com.uchicom.syo.action.file;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
@@ -29,9 +30,14 @@ public class OpenAction extends AbstractResourceAction<EditorFrame> {
 		int result = chooser.showOpenDialog(uiStore.getMainComponent());
 		if (result != JFileChooser.CANCEL_OPTION) {
 			File file = chooser.getSelectedFile();
-			textArea.setText(FileUtil.readFile(file));
-			textArea.setCaretPosition(0);
-			uiStore.getMainComponent().setTitle(file.getName());
+
+			try {
+				textArea.setText(FileUtil.readFile(file, uiStore.getMainComponent().getCharset()));
+				textArea.setCaretPosition(0);
+				uiStore.getMainComponent().setTitle(file.getName());
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 

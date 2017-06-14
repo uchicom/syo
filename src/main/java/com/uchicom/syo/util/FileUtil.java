@@ -6,10 +6,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 public class FileUtil {
 
-	public static String readFile(File file) {
+	public static String readFile(File file, String charset) throws UnsupportedEncodingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try (FileInputStream is = new FileInputStream(file)) {
 			int length = 0;
@@ -22,6 +24,6 @@ public class FileUtil {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		return new String(baos.toByteArray());
+		return new String(baos.toByteArray(), Charset.forName(charset));
 	}
 }
