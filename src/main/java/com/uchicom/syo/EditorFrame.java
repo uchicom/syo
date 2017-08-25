@@ -2,8 +2,8 @@
 package com.uchicom.syo;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -16,8 +16,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,7 +31,6 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -42,8 +39,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.TransferHandler;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
@@ -54,7 +49,9 @@ import javax.swing.undo.UndoManager;
 import com.uchicom.syo.action.script.ScriptAction;
 import com.uchicom.syo.util.FileUtil;
 import com.uchicom.syo.util.LineNumberView;
+import com.uchicom.ui.ResumeFrame;
 import com.uchicom.ui.util.ImageUtil;
+import com.uchicom.ui.util.ResourceUtil;
 import com.uchicom.ui.util.UIStore;
 
 /**
@@ -62,13 +59,12 @@ import com.uchicom.ui.util.UIStore;
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class EditorFrame extends JFrame implements UIStore<EditorFrame>, ClipboardOwner {
+public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, ClipboardOwner {
 
 	private JTextArea textArea = new JTextArea();
 	private UndoManager undoManager = new UndoManager();
-	private Properties menuResource = new Properties();
-	private Properties resource = new Properties();
-	private Properties config = new Properties();
+	private Properties menuResource;
+	private Properties resource;
 	private static final ResourceBundle resourceBundle = ResourceBundle
 			.getBundle("com.uchicom.syo.resource");
 	// ボタンの準備
@@ -91,16 +87,13 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 	 * 設定プロパティーファイルの相対パス
 	 */
 	private static final String CONF_FILE_PATH = "./conf/syo" + PROP_EXT;
-	/**
-	 * 画面の初期位置保持キー
-	 */
-	private static final String PROP_INIT_KEY = "init";
 
 	private File file;
 	private boolean selected = false;
 	private int value;
 
 	public EditorFrame(int value) {
+		super(new File(CONF_FILE_PATH), "syo.window");
 		this.value = value;
 		initComponents(null, null);
 	}
@@ -110,6 +103,7 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 	}
 
 	public EditorFrame(File file, Rectangle rectangle) {
+		super(new File(CONF_FILE_PATH), "syo.window");
 		this.file = file;
 		initComponents(file, rectangle);
 	}
@@ -126,24 +120,12 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 			setTitle(null);
 		}
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		loadConf();
 
-		try {
-			menuResource.load(new FileInputStream("./conf/menu.properties"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			resource.load(new FileInputStream("./conf/resource.properties"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		//他のファイルの読み込みをどうするのか
+		menuResource = ResourceUtil.createProperties(new File("./conf/menu.properties"), "UTF-8");
+		resource = ResourceUtil.createProperties(new File("./conf/resource.properties"), "UTF-8");
+		textArea.setFont(new Font("Monospaced", Font.PLAIN,  12));//TODO 設定ファイル化
+		textArea.setTabSize(4);//TODO 設定ファイル化
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent e) {
 				if (e instanceof DefaultDocumentEvent) {
@@ -590,55 +572,6 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 			actionMap.put(key, action);
 		}
 		return action;
-	}
-
-	private void loadConf() {
-		// 設定プロパティーファイル読み込み
-		File file = new File(CONF_FILE_PATH);
-		FileInputStream fis = null;
-		try {
-			if (file.exists()) {
-				fis = new FileInputStream(file);
-				config.load(fis);
-				// 画面の初期位置取得
-				if (config.containsKey(PROP_INIT_KEY)) {
-					String initPoint = config.getProperty(PROP_INIT_KEY);
-					String[] points = initPoint.split(":");
-					if (points.length == 4) {
-						setLocation(Integer.parseInt(points[0]),
-								Integer.parseInt(points[1]));
-						setPreferredSize(new Dimension(
-								Integer.parseInt(points[2]),
-								Integer.parseInt(points[3])));
-					}
-				}
-				if (config.containsKey("lookAndFeel")) {
-					String lookAndFeel = config.getProperty("lookAndFeel");
-					UIManager.setLookAndFeel(lookAndFeel);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		} finally {
-			// ファイル入力ストリームのクローズ処理
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					fis = null;
-				}
-			}
-		}
 	}
 
 	private void setScriptMenu(File dir, JMenu menu) throws IOException {
