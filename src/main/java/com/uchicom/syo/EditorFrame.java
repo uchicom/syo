@@ -106,15 +106,20 @@ public class EditorFrame extends JFrame implements UIStore<EditorFrame>, Clipboa
 	}
 
 	public EditorFrame(File file) {
-		initComponents(file, null);
+		this(file, null);
 	}
 
 	public EditorFrame(File file, Rectangle rectangle) {
+		this.file = file;
 		initComponents(file, rectangle);
 	}
 
 	private void initComponents(File file, Rectangle rectangle) {
-		setIconImage(ImageUtil.getImageIcon("images/icon.png").getImage());
+		try {
+			setIconImage(ImageUtil.getImageIcon("images/icon.png").getImage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (file != null) {
 			setTitle(file.getName());
 		} else {
