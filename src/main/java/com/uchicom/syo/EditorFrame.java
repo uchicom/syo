@@ -641,7 +641,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	public void overwrite() {
 		if (file != null && file.exists()) {
 			try (FileOutputStream fos = new FileOutputStream(file);) {
-				fos.write(textArea.getText().getBytes());
+				fos.write(textArea.getText().getBytes("utf-8"));
 				fos.flush();
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -664,7 +664,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			}
 
 			try (FileOutputStream fos = new FileOutputStream(selectFile);) {
-				fos.write(textArea.getText().getBytes());
+				fos.write(textArea.getText().getBytes("utf-8"));
 				fos.flush();
 
 				setFile(selectFile);
