@@ -233,16 +233,17 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 									textArea.setCaretPosition(0);
 									start = 1;
 									setTitle(file.getName());
+									EditorFrame.this.file = file;
 								}
-								Rectangle rectangle = EditorFrame.this
-										.getBounds();
+								Rectangle rectangle = (Rectangle) EditorFrame.this
+										.getBounds().clone();
 								for (int i = start; i < fileList.size(); i++) {
-
+									file = fileList.get(i);
 									if (!file.equals(EditorFrame.this.file)) {
 										rectangle.x += 26;
 										rectangle.y += 26;
+										Starter.open(file, (Rectangle)rectangle.clone());
 									}
-									Starter.open(file, rectangle);
 								}
 							}
 						} catch (UnsupportedFlavorException e) {
