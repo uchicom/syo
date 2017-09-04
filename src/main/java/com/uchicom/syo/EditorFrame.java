@@ -109,6 +109,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	}
 
 	private void initComponents(File file, Rectangle rectangle) {
+		textArea.setUI(new BoxSelectionTextAreaUI(textArea));
 		try {
 			setIconImage(ImageUtil.getImageIcon("images/icon.png").getImage());
 		} catch (Exception e) {
