@@ -9,10 +9,9 @@ import java.awt.Shape;
 import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.plaf.TextUI;
 import javax.swing.plaf.basic.BasicTextAreaUI;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.BoxPlainView;
+import javax.swing.text.Box2View;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
@@ -34,8 +33,7 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 	/**
 	 * Creates the view for an element. Returns a WrappedPlainView or PlainView.
 	 *
-	 * @param elem
-	 *            the element
+	 * @param elem the element
 	 * @return the view
 	 */
 	@Override
@@ -47,30 +45,41 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 			if (area.getLineWrap()) {
 				v = new WrappedPlainView(elem, area.getWrapStyleWord());
 			} else {
-				v = new BoxPlainView(elem);
+				v = new Box2View(elem);
 			}
 			return v;
 		}
 		return null;
 	}
 
-	@Override
-	public void damageRange(JTextComponent t, int p0, int p1) {
-
-		System.out.println("dr;" + p0 + "," + p1);
-		super.paint(null, t);
-		super.damageRange(t, p0, p1);
-	}
+//	@Override
+//	public void damageRange(JTextComponent t, int p0, int p1) {
+//
+//		System.out.println("dr;" + p0 + "," + p1);
+//		super.paint(null, t);
+//		super.damageRange(t, p0, p1);
+//	}
 
 	@Override
 	protected Highlighter createHighlighter() {
 		return new BasicHighlighter() {
 			@Override
+			public void paintLayeredHighlights(Graphics g,
+					int p0,
+					int p1,
+					Shape viewBounds,
+					JTextComponent editor,
+					View view) {
+//				System.out.println(" p0,p1:" + p0 + ":" + p1);
+				super.paintLayeredHighlights(g, p0, p1, viewBounds, editor, view);
+			}
+
+			@Override
 			public void paint(Graphics g) {
 				// PENDING(prinz) - should cull ranges not visible
 				Highlight[] hs = getHighlights();
 				if (hs != null) {
-					System.out.println("paint:highlights:" + hs.length);
+//					System.out.println("paint:highlights:" + hs.length);
 
 				}
 				super.paint(g);
@@ -80,13 +89,13 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 			public Object addHighlight(int p0, int p1, HighlightPainter p) throws BadLocationException {
 				Object obj = super.addHighlight(p0, p1, p);
 
-				System.out.println("a:" + obj + ":" + p0 + ":" + p1);
+//				System.out.println("a:" + obj + ":" + p0 + ":" + p1);
 				return obj;
 			}
 
 			@Override
 			public void changeHighlight(Object tag, int p0, int p1) throws BadLocationException {
-				System.out.println("c:" + tag + ":" + p0 + "," + p1);
+//				System.out.println("c:" + tag + ":" + p0 + "," + p1);
 				super.changeHighlight(tag, p0, p1);
 			}
 		};
@@ -99,50 +108,54 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 
 			@Override
 			protected HighlightPainter getSelectionPainter() {
-				System.out.println("getSelectionPainter");
+//				System.out.println("getSelectionPainter");
 				return new DefaultHighlighter.DefaultHighlightPainter(null) {
-					@Override
-					public void paint(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c) {
-						// System.out.println(offs0 + ":" + offs1 + ";" +
-						// bounds);
-						Rectangle alloc = bounds.getBounds();
-						try {
-							// --- determine locations ---
-							TextUI mapper = c.getUI();
-							Rectangle p0 = mapper.modelToView(c, offs0);
-							Rectangle p1 = mapper.modelToView(c, offs1);
+//					@Override
+//					public void paint(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c) {
+//						// System.out.println(offs0 + ":" + offs1 + ";" +
+//						// bounds);
+//						Rectangle alloc = bounds.getBounds();
+//						try {
+//							// --- determine locations ---
+//							TextUI mapper = c.getUI();
+//							Rectangle p0 = mapper.modelToView(c, offs0);
+//							Rectangle p1 = mapper.modelToView(c, offs1);
+//
+//							// --- render ---
+//							Color color = getColor();
+//							color = Color.BLUE;
+//							if (color == null) {
+//								g.setColor(c.getSelectionColor());
+//							} else {
+//								g.setColor(color);
+//							}
+//							if (p0.y == p1.y) {
+//								// same line, render a rectangle
+//								Rectangle r = p0.union(p1);
+//								g.fillRect(r.x, r.y, r.width, r.height);
+//							} else {
+//								// different lines
+//								int p0ToMarginWidth = alloc.x + alloc.width - p0.x;
+//								g.fillRect(p0.x, p0.y, p0ToMarginWidth, p0.height);
+//								if ((p0.y + p0.height) != p1.y) {
+//									g.fillRect(alloc.x, p0.y + p0.height, alloc.width, p1.y - (p0.y + p0.height));
+//								}
+//								g.fillRect(alloc.x, p1.y, (p1.x - alloc.x), p1.height);
+//							}
+//						} catch (BadLocationException e) {
+//							// can't render
+//						}
+//
+//					}
 
-							// --- render ---
-							Color color = getColor();
-							color = Color.BLUE;
-							if (color == null) {
-								g.setColor(c.getSelectionColor());
-							} else {
-								g.setColor(color);
-							}
-							if (p0.y == p1.y) {
-								// same line, render a rectangle
-								Rectangle r = p0.union(p1);
-								g.fillRect(r.x, r.y, r.width, r.height);
-							} else {
-								// different lines
-								int p0ToMarginWidth = alloc.x + alloc.width - p0.x;
-								g.fillRect(p0.x, p0.y, p0ToMarginWidth, p0.height);
-								if ((p0.y + p0.height) != p1.y) {
-									g.fillRect(alloc.x, p0.y + p0.height, alloc.width, p1.y - (p0.y + p0.height));
-								}
-								g.fillRect(alloc.x, p1.y, (p1.x - alloc.x), p1.height);
-							}
-						} catch (BadLocationException e) {
-							// can't render
-						}
-
-					}
-
-					public Shape paintLayer(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c,
+					public Shape paintLayer(Graphics g,
+							int offs0,
+							int offs1,
+							Shape bounds,
+							JTextComponent c,
 							View view) {
-						// System.out.println("paintLayer:" + offs0 + "," +
-						// offs1 + ":" + bounds);
+						 System.out.println("paintLayer:" + offs0 + "," +
+						 offs1 + ":" + bounds);
 						Color color = getColor();
 
 						color = Color.BLUE;
@@ -165,8 +178,11 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 							// Should only render part of View.
 							try {
 								// --- determine locations ---
-								Shape shape = view.modelToView(offs0, Position.Bias.Forward, offs1,
-										Position.Bias.Backward, bounds);
+								Shape shape = view.modelToView(offs0,
+										Position.Bias.Forward,
+										offs1,
+										Position.Bias.Backward,
+										bounds);
 								r = (shape instanceof Rectangle) ? (Rectangle) shape : shape.getBounds();
 							} catch (BadLocationException e) {
 								// can't render
