@@ -11,7 +11,6 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.plaf.basic.BasicTextAreaUI;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Box2View;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
@@ -45,7 +44,7 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 			if (area.getLineWrap()) {
 				v = new WrappedPlainView(elem, area.getWrapStyleWord());
 			} else {
-				v = new Box2View(elem);
+				v = new Box3View(elem);
 			}
 			return v;
 		}
@@ -147,7 +146,7 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 //						}
 //
 //					}
-
+					@Override
 					public Shape paintLayer(Graphics g,
 							int offs0,
 							int offs1,
