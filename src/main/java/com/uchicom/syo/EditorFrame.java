@@ -125,7 +125,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		//他のファイルの読み込みをどうするのか
 		menuResource = ResourceUtil.createProperties(new File("./conf/menu.properties"), "UTF-8");
 		resource = ResourceUtil.createProperties(new File("./conf/resource.properties"), "UTF-8");
-		textArea.setFont(new Font("Monospaced", Font.PLAIN,  12));//TODO 設定ファイル化
+		textArea.setFont(new Font("MS Gothic", Font.PLAIN,  12));//TODO 設定ファイル化
 		textArea.setTabSize(4);//TODO 設定ファイル化
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent e) {
