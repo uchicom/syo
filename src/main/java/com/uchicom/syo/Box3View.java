@@ -46,10 +46,14 @@ public class Box3View extends PlainView {
 	 * <code>drawUnselectedText</code> and <code>drawSelectedText</code> so that
 	 * the way selected and unselected text are rendered can be customized.
 	 *
-	 * @param lineIndex the line to draw &gt;= 0
-	 * @param g the <code>Graphics</code> context
-	 * @param x the starting X position &gt;= 0
-	 * @param y the starting Y position &gt;= 0
+	 * @param lineIndex
+	 *            the line to draw &gt;= 0
+	 * @param g
+	 *            the <code>Graphics</code> context
+	 * @param x
+	 *            the starting X position &gt;= 0
+	 * @param y
+	 *            the starting Y position &gt;= 0
 	 * @see #drawUnselectedText
 	 * @see #drawSelectedText
 	 */
@@ -84,42 +88,36 @@ public class Box3View extends PlainView {
 		AttributeSet attr = elem.getAttributes();
 		if (isComposedTextAttributeDefined(attr)) {
 			g.setColor(unselected);
-			x = drawComposedText(this,
-					attr,
-					g,
-					x,
-					y,
-					p0 - elem.getStartOffset(),
-					p1 - elem.getStartOffset());
+			x = drawComposedText(this, attr, g, x, y, p0 - elem.getStartOffset(), p1 - elem.getStartOffset());
 		} else {
 			if (sel0 == sel1 || selected == unselected) {
 				// no selection, or it is invisible
-				 g.setColor(unselected);
+				g.setColor(unselected);
 				x = drawUnselectedText(g, x, y, p0, p1);
 			} else if ((p0 >= sel0 && p0 <= sel1) && (p1 >= sel0 && p1 <= sel1)) {
-				 g.setColor(selected);
+				g.setColor(selected);
 				x = drawSelectedText(g, x, y, p0, p1);
 			} else if (sel0 >= p0 && sel0 <= p1) {
 				if (sel1 >= p0 && sel1 <= p1) {
-					 g.setColor(unselected);
+					g.setColor(unselected);
 					x = drawUnselectedText(g, x, y, p0, sel0);
-					 g.setColor(selected);
+					g.setColor(selected);
 					x = drawSelectedText(g, x, y, sel0, sel1);
-					 g.setColor(unselected);
+					g.setColor(unselected);
 					x = drawUnselectedText(g, x, y, sel1, p1);
 				} else {
-					 g.setColor(unselected);
+					g.setColor(unselected);
 					x = drawUnselectedText(g, x, y, p0, sel0);
-					 g.setColor(selected);
+					g.setColor(selected);
 					x = drawSelectedText(g, x, y, sel0, p1);
 				}
 			} else if (sel1 >= p0 && sel1 <= p1) {
-				 g.setColor(selected);
+				g.setColor(selected);
 				x = drawSelectedText(g, x, y, p0, sel1);
-				 g.setColor(unselected);
+				g.setColor(unselected);
 				x = drawUnselectedText(g, x, y, sel1, p1);
 			} else {
-				 g.setColor(unselected);
+				g.setColor(unselected);
 				x = drawUnselectedText(g, x, y, p0, p1);
 			}
 		}
@@ -128,29 +126,20 @@ public class Box3View extends PlainView {
 	}
 
 	static boolean isComposedTextAttributeDefined(AttributeSet as) {
-		return ((as != null) &&
-				(as.isDefined(StyleConstants.ComposedTextAttribute)));
+		return ((as != null) && (as.isDefined(StyleConstants.ComposedTextAttribute)));
 	}
 
-	static int drawComposedText(View view,
-			AttributeSet attr,
-			Graphics g,
-			int x,
-			int y,
-			int p0,
-			int p1)
+	static int drawComposedText(View view, AttributeSet attr, Graphics g, int x, int y, int p0, int p1)
 			throws BadLocationException {
 		Graphics2D g2d = (Graphics2D) g;
-		AttributedString as = (AttributedString) attr.getAttribute(
-				StyleConstants.ComposedTextAttribute);
+		AttributedString as = (AttributedString) attr.getAttribute(StyleConstants.ComposedTextAttribute);
 		as.addAttribute(TextAttribute.FONT, g.getFont());
 
 		if (p0 >= p1)
 			return x;
 
 		AttributedCharacterIterator aci = as.getIterator(null, p0, p1);
-		return x + (int) SwingUtilities2.drawString(
-				getJComponent(view), g2d, aci, x, y);
+		return x + (int) SwingUtilities2.drawString(getJComponent(view), g2d, aci, x, y);
 	}
 
 	static JComponent getJComponent(View view) {
@@ -168,8 +157,10 @@ public class Box3View extends PlainView {
 	 * view may need to do layout and create child views to enable itself to
 	 * render into the given allocation.
 	 *
-	 * @param g the rendering surface to use
-	 * @param a the allocated region to render into
+	 * @param g
+	 *            the rendering surface to use
+	 * @param a
+	 *            the allocated region to render into
 	 *
 	 * @see View#paint
 	 */
@@ -188,7 +179,7 @@ public class Box3View extends PlainView {
 		updateMetrics();
 
 		// If the lines are clipped then we don't expend the effort to
-		// try and paint them.  Since all of the lines are the same height
+		// try and paint them. Since all of the lines are the same height
 		// with this object, determination of what lines need to be repainted
 		// is quick.
 		Rectangle clip = g.getClipBounds();
@@ -229,8 +220,10 @@ public class Box3View extends PlainView {
 				if (lineElement.getStartOffset() <= sel0 && lineElement.getEndOffset() >= sel0) {
 					startIndex = sel0 - lineElement.getStartOffset();
 					try {
-						startWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(), sel0 - lineElement.getStartOffset()));
-						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(), sel0 - lineElement.getStartOffset()));
+						startWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(),
+								sel0 - lineElement.getStartOffset()));
+						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(),
+								sel0 - lineElement.getStartOffset()));
 					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
@@ -240,8 +233,10 @@ public class Box3View extends PlainView {
 				if (lineElement.getStartOffset() <= sel1 && lineElement.getEndOffset() >= sel1) {
 					endIndex = sel1 - lineElement.getStartOffset();
 					try {
-						endWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(), sel1 - lineElement.getStartOffset()));
-						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(), sel1 - lineElement.getStartOffset()));
+						endWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(),
+								sel1 - lineElement.getStartOffset()));
+						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(),
+								sel1 - lineElement.getStartOffset()));
 					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
@@ -250,61 +245,65 @@ public class Box3View extends PlainView {
 				}
 			}
 		}
-		//TODO: metrics.getStringWidth
+		// TODO: metrics.getStringWidth
 		for (int line = linesAbove; line < endLine; line++) {
 			if (dh != null) {
 				Element lineElement = map.getElement(line);
 
-				if (line == lineCount) {
+				if (line == lineCount) {// 最終行チェック
 					if (startIndex > -1 && endIndex > -1) {
 						try {
-							System.out.println(lineElement.getStartOffset() + ":"+ lineElement.getEndOffset());
-						String text = lineElement.getDocument().getText(lineElement.getStartOffset(), lineElement.getEndOffset() -  lineElement.getStartOffset() );
+							System.out.println(lineElement.getStartOffset() + ":" + lineElement.getEndOffset());
+							String text = lineElement.getDocument().getText(lineElement.getStartOffset(),
+									lineElement.getEndOffset() - lineElement.getStartOffset());
+							int s = getStartIndex(startWidth, text);
+							int e = getStartIndex(endWidth, text);
+							if (s > e) {
+								int tmp = s;
+								s = e;
+								e = tmp;
+							}
 							System.out.println("t1:" + text);
-							System.out.println("s:" + getStartIndex(startWidth, text));
-							System.out.println("e:" + getStartIndex(endWidth, text));
-							dh.paintLayeredHighlights(g,
-									lineElement.getStartOffset() + getStartIndex(startWidth, text),
-									lineElement.getStartOffset() + getStartIndex(endWidth, text),
-									originalA,
-									host,
+							System.out.println("s1:" + s);
+							System.out.println("e1:" + e);
+							dh.paintLayeredHighlights(g, lineElement.getStartOffset() + s,
+									lineElement.getStartOffset() + e, originalA, host,
 									this);
 						} catch (BadLocationException e) {
 							System.err.println(lineElement.toString());
 							System.err.println(e.getMessage());
 						}
 					} else {
-						dh.paintLayeredHighlights(g,
-								lineElement.getStartOffset(),
-								lineElement.getEndOffset(),
-								originalA,
-								host,
-								this);
+						System.out.println("このパターン？");
+						dh.paintLayeredHighlights(g, lineElement.getStartOffset(), lineElement.getEndOffset(),
+								originalA, host, this);
 					}
 				} else {
-					System.out.println("こっちだ");
+					System.out.println("こっちだ");// -1は改行を排除している
 					if (startIndex > -1 && endIndex > -1) {
 						try {
-							System.out.println(lineElement.getStartOffset() + ":"+ lineElement.getEndOffset());
-							String text = lineElement.getDocument().getText(lineElement.getStartOffset(), lineElement.getEndOffset() -  lineElement.getStartOffset() );
-								System.out.println("t2:" + text);
-								System.out.println("s:" + getStartIndex(startWidth, text));
-								System.out.println("e:" + getStartIndex(endWidth, text));
-								dh.paintLayeredHighlights(g,
-										lineElement.getStartOffset() + getStartIndex(startWidth, text),
-										lineElement.getStartOffset() + getStartIndex(endWidth, text),
-										originalA,
-										host,
-										this);
-							} catch (BadLocationException e) {
+							System.out.println(lineElement.getStartOffset() + ":" + lineElement.getEndOffset());
+							String text = lineElement.getDocument().getText(lineElement.getStartOffset(),
+									lineElement.getEndOffset() - lineElement.getStartOffset());
+
+							int s = getStartIndex(startWidth, text);
+							int e = getStartIndex(endWidth, text);
+							if (s > e) {
+								int tmp = s;
+								s = e;
+								e = tmp;
 							}
+							System.out.println("t2:" + text);
+							System.out.println("s2:" + s);
+							System.out.println("e2:" + e);
+							dh.paintLayeredHighlights(g, lineElement.getStartOffset() + getStartIndex(startWidth, text),
+									lineElement.getStartOffset() + getStartIndex(endWidth, text), originalA, host,
+									this);
+						} catch (BadLocationException e) {
+						}
 					} else {
-						dh.paintLayeredHighlights(g,
-								lineElement.getStartOffset(),
-								lineElement.getEndOffset() - 1,
-								originalA,
-								host,
-								this);
+						dh.paintLayeredHighlights(g, lineElement.getStartOffset(), lineElement.getEndOffset() - 1,
+								originalA, host, this);
 					}
 				}
 			}
@@ -320,7 +319,8 @@ public class Box3View extends PlainView {
 	}
 
 	public int getStartIndex(int width, String text) {
-		if (width == 0) return 0;
+		if (width == 0)
+			return 0;
 		int max = text.length();
 		int sumWidth = 0;
 		for (int i = 0; i < max; i++) {
