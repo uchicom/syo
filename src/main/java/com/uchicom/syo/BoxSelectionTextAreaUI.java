@@ -37,7 +37,7 @@ public class BoxSelectionTextAreaUI extends BasicTextAreaUI {
 				v = new WrappedPlainView(elem, area.getWrapStyleWord());
 			} else {
 				System.out.println("box3view");
-				v = new Box3View(elem);
+				v = new BoxView(elem);
 			}
 			return v;
 		}

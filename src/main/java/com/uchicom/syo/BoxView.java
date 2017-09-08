@@ -31,12 +31,12 @@ import sun.swing.SwingUtilities2;
  * @author uchicom: Shigeki Uchiyama
  *
  */
-public class Box3View extends PlainView {
+public class BoxView extends PlainView {
 
 	/**
 	 * @param elem
 	 */
-	public Box3View(Element elem) {
+	public BoxView(Element elem) {
 		super(elem);
 	}
 
