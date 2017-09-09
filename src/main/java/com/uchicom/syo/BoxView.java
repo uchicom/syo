@@ -222,30 +222,29 @@ public class BoxView extends PlainView {
 					try {
 						startWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(),
 								sel0 - lineElement.getStartOffset()));
-						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(),
-								sel0 - lineElement.getStartOffset()));
+//						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(),
+//								sel0 - lineElement.getStartOffset()));
 					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
-					System.out.println("start:" + startIndex);
-					System.out.println("startWidth:" + startWidth);
+//					System.out.println("start:" + startIndex);
+//					System.out.println("startWidth:" + startWidth);
 				}
 				if (lineElement.getStartOffset() <= sel1 && lineElement.getEndOffset() >= sel1) {
 					endIndex = sel1 - lineElement.getStartOffset();
 					try {
 						endWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(),
 								sel1 - lineElement.getStartOffset()));
-						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(),
-								sel1 - lineElement.getStartOffset()));
+//						System.out.println(lineElement.getDocument().getText(lineElement.getStartOffset(),
+//								sel1 - lineElement.getStartOffset()));
 					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
-					System.out.println("end:" + endIndex);
-					System.out.println("endWidth:" + endWidth);
+//					System.out.println("end:" + endIndex);
+//					System.out.println("endWidth:" + endWidth);
 				}
 			}
 		}
-		// TODO: metrics.getStringWidth
 		for (int line = linesAbove; line < endLine; line++) {
 			if (dh != null) {
 				Element lineElement = map.getElement(line);
@@ -253,51 +252,47 @@ public class BoxView extends PlainView {
 				if (line == lineCount) {// 最終行チェック
 					if (startIndex > -1 && endIndex > -1) {
 						try {
-							System.out.println(lineElement.getStartOffset() + ":" + lineElement.getEndOffset());
-							String text = lineElement.getDocument().getText(lineElement.getStartOffset(),
-									lineElement.getEndOffset() - lineElement.getStartOffset());
-							int s = getStartIndex(startWidth, text);
-							int e = getStartIndex(endWidth, text);
+							int startOffset = lineElement.getStartOffset();
+							String text = lineElement.getDocument().getText(startOffset,
+									lineElement.getEndOffset() - startOffset);
+							int s = getIndex(startWidth, text);
+							int e = getIndex(endWidth, text);
 							if (s > e) {
 								int tmp = s;
 								s = e;
 								e = tmp;
 							}
-							System.out.println("t1:" + text);
-							System.out.println("s1:" + s);
-							System.out.println("e1:" + e);
-							dh.paintLayeredHighlights(g, lineElement.getStartOffset() + s,
-									lineElement.getStartOffset() + e, originalA, host,
+							dh.paintLayeredHighlights(g, startOffset + s,
+									startOffset + e, originalA, host,
 									this);
 						} catch (BadLocationException e) {
 							System.err.println(lineElement.toString());
 							System.err.println(e.getMessage());
 						}
 					} else {
-						System.out.println("このパターン？");
 						dh.paintLayeredHighlights(g, lineElement.getStartOffset(), lineElement.getEndOffset(),
 								originalA, host, this);
 					}
 				} else {
-					System.out.println("こっちだ");// -1は改行を排除している
 					if (startIndex > -1 && endIndex > -1) {
 						try {
-							System.out.println(lineElement.getStartOffset() + ":" + lineElement.getEndOffset());
-							String text = lineElement.getDocument().getText(lineElement.getStartOffset(),
-									lineElement.getEndOffset() - lineElement.getStartOffset());
+							int startOffset = lineElement.getStartOffset();
+							int endOffset = lineElement.getEndOffset();
+							String text = lineElement.getDocument().getText(startOffset,
+									lineElement.getEndOffset() - startOffset);
 
-							int s = getStartIndex(startWidth, text);
-							int e = getStartIndex(endWidth, text);
+							int s = getIndex(startWidth, text);
+							int e = getIndex(endWidth, text);
 							if (s > e) {
 								int tmp = s;
 								s = e;
 								e = tmp;
 							}
-							System.out.println("t2:" + text);
-							System.out.println("s2:" + s);
-							System.out.println("e2:" + e);
-							dh.paintLayeredHighlights(g, lineElement.getStartOffset() + getStartIndex(startWidth, text),
-									lineElement.getStartOffset() + getStartIndex(endWidth, text), originalA, host,
+							if (startOffset + e >= endOffset) {
+								e--;
+							}
+							dh.paintLayeredHighlights(g, startOffset + s,
+									startOffset + e, originalA, host,
 									this);
 						} catch (BadLocationException e) {
 						}
@@ -318,7 +313,13 @@ public class BoxView extends PlainView {
 		}
 	}
 
-	public int getStartIndex(int width, String text) {
+	/**
+	 * 文字の長さから文字数を算出する
+	 * @param width
+	 * @param text
+	 * @return
+	 */
+	public int getIndex(int width, String text) {
 		if (width == 0)
 			return 0;
 		int max = text.length();

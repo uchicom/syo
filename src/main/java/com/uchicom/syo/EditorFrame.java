@@ -44,6 +44,9 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument.DefaultDocumentEvent;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
 import javax.swing.undo.UndoManager;
 
 import com.uchicom.syo.action.script.ScriptAction;
@@ -56,17 +59,39 @@ import com.uchicom.ui.util.UIStore;
 
 /**
  * テキストエディタ.
+ *
  * @author uchicom: Shigeki Uchiyama
  *
  */
 public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, ClipboardOwner {
 
-	private JTextArea textArea = new JTextArea();
+	private JTextArea textArea = new JTextArea() {
+		@Override
+		public String getSelectedText() {
+			Caret caret = getCaret();
+			String txt = null;
+			int p0 = Math.min(caret.getDot(), caret.getMark());
+			int p1 = Math.max(caret.getDot(), caret.getMark());
+			if (p0 != p1) {
+				try {
+					Document doc = getDocument();
+					if (getUI() instanceof BoxSelectionTextAreaUI) {
+						// TODO:ここで作成する
+
+					} else {
+						txt = doc.getText(p0, p1 - p0);
+					}
+				} catch (BadLocationException e) {
+					throw new IllegalArgumentException(e.getMessage());
+				}
+			}
+			return txt;
+		}
+	};
 	private UndoManager undoManager = new UndoManager();
 	private Properties menuResource;
 	private Properties resource;
-	private static final ResourceBundle resourceBundle = ResourceBundle
-			.getBundle("com.uchicom.syo.resource");
+	private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("com.uchicom.syo.resource");
 	// ボタンの準備
 	private JPanel northPanel = new JPanel(new FlowLayout());
 	private JPanel southPanel = new JPanel(new FlowLayout());
@@ -122,11 +147,11 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		}
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		//他のファイルの読み込みをどうするのか
+		// 他のファイルの読み込みをどうするのか
 		menuResource = ResourceUtil.createProperties(new File("./conf/menu.properties"), "UTF-8");
 		resource = ResourceUtil.createProperties(new File("./conf/resource.properties"), "UTF-8");
-		textArea.setFont(new Font("MS Gothic", Font.PLAIN,  12));//TODO 設定ファイル化
-		textArea.setTabSize(4);//TODO 設定ファイル化
+		textArea.setFont(new Font("MS Gothic", Font.PLAIN, 12));// TODO 設定ファイル化
+		textArea.setTabSize(4);// TODO 設定ファイル化
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent e) {
 				if (e instanceof DefaultDocumentEvent) {
@@ -149,22 +174,19 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			}
 		});
 
-		//ドラッグアンドドロップでファイルオープン機能
+		// ドラッグアンドドロップでファイルオープン機能
 		TransferHandler handler = new TransferHandler() {
 			@Override
-			public void exportToClipboard(JComponent comp, Clipboard clip,
-					int action) {
+			public void exportToClipboard(JComponent comp, Clipboard clip, int action) {
 				String text = textArea.getSelectedText();
 
 				if (text != null) {
 					switch (action) {
 					case 1:
-						clip.setContents(new StringSelection(text),
-								EditorFrame.this);
+						clip.setContents(new StringSelection(text), EditorFrame.this);
 						break;
 					case 2:
-						clip.setContents(new StringSelection(text),
-								EditorFrame.this);
+						clip.setContents(new StringSelection(text), EditorFrame.this);
 
 						int start = textArea.getSelectionStart();
 						int end = textArea.getSelectionEnd();
@@ -197,15 +219,13 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 						Transferable t = support.getTransferable();
 						String value = null;
 						try {
-							value = (String) t
-									.getTransferData(DataFlavor.stringFlavor);
+							value = (String) t.getTransferData(DataFlavor.stringFlavor);
 							int start = textArea.getSelectionStart();
 							int end = textArea.getSelectionEnd();
 							if (start < end) {
 								textArea.replaceRange(value, start, end);
 							} else {
-								textArea.insert(value,
-										textArea.getCaretPosition());
+								textArea.insert(value, textArea.getCaretPosition());
 							}
 						} catch (UnsupportedFlavorException e) {
 							// TODO 自動生成された catch ブロック
@@ -224,8 +244,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 
 						try {
 							@SuppressWarnings("unchecked")
-							List<File> fileList = (List<File>) t
-									.getTransferData(DataFlavor.javaFileListFlavor);
+							List<File> fileList = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
 							if (fileList.size() > 0) {
 								File file = fileList.get(0);
 								int start = 0;
@@ -236,14 +255,13 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 									setTitle(file.getName());
 									EditorFrame.this.file = file;
 								}
-								Rectangle rectangle = (Rectangle) EditorFrame.this
-										.getBounds().clone();
+								Rectangle rectangle = (Rectangle) EditorFrame.this.getBounds().clone();
 								for (int i = start; i < fileList.size(); i++) {
 									file = fileList.get(i);
 									if (!file.equals(EditorFrame.this.file)) {
 										rectangle.x += 26;
 										rectangle.y += 26;
-										Starter.open(file, (Rectangle)rectangle.clone());
+										Starter.open(file, (Rectangle) rectangle.clone());
 									}
 								}
 							}
@@ -299,7 +317,9 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			} else {
 				JMenuItem menu = createMenu("popup." + menuProp);
 				System.out.println(menu);
-				if (menu == null) continue;
+				if (menu == null) {
+					continue;
+				}
 				popupMenu.add(menu);
 			}
 		}
@@ -339,20 +359,19 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			setBounds(rectangle);
 		} else {
 			if (file == null) {
-				//表示位置をずらす
+				// 表示位置をずらす
 				Point p = getLocation();
 				p.x += value * 26;
 				p.y += value * 26;
-				//超えたら
+				// 超えたら
 				Rectangle rec = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 				rectangle = getBounds();
 				System.out.println(rectangle);
-				if (p.x + rectangle.width < rec.width &&
-						p.y + rectangle.height < rec.height) {
+				if (p.x + rectangle.width < rec.width && p.y + rectangle.height < rec.height) {
 					setLocation(p);
 				} else {
 					// widthで引いて、 33 + a
-					int a=0;
+					int a = 0;
 					int val = 0;
 					int count = (rec.width - rectangle.width - 66) / 26;
 					if (count > (rec.height - rectangle.height - 66) / 26) {
@@ -370,55 +389,55 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 				}
 			}
 		}
-//		textArea.addFocusListener(new FocusListener() {
-//
-//			@Override
-//			public void focusLost(FocusEvent e) {
-//				System.out.println("c");
-//
-//			}
-//
-//			@Override
-//			public void focusGained(FocusEvent e) {
-//
-//				System.out.println("b" + e.getOppositeComponent());
-//
-//			}
-//		});
-//		popupMenu.addMouseListener(new MouseListener() {
-//
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//				// TODO 自動生成されたメソッド・スタブ
-//				System.out.println("aa");
-//
-//			}
-//
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				// TODO 自動生成されたメソッド・スタブ
-//
-//			}
-//
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//				// TODO 自動生成されたメソッド・スタブ
-//
-//			}
-//
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//				// TODO 自動生成されたメソッド・スタブ
-//
-//			}
-//
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				// TODO 自動生成されたメソッド・スタブ
-//
-//			}
-//		});
-		textArea.addMouseListener(new MouseListener(){
+		// textArea.addFocusListener(new FocusListener() {
+		//
+		// @Override
+		// public void focusLost(FocusEvent e) {
+		// System.out.println("c");
+		//
+		// }
+		//
+		// @Override
+		// public void focusGained(FocusEvent e) {
+		//
+		// System.out.println("b" + e.getOppositeComponent());
+		//
+		// }
+		// });
+		// popupMenu.addMouseListener(new MouseListener() {
+		//
+		// @Override
+		// public void mouseReleased(MouseEvent e) {
+		// // TODO 自動生成されたメソッド・スタブ
+		// System.out.println("aa");
+		//
+		// }
+		//
+		// @Override
+		// public void mousePressed(MouseEvent e) {
+		// // TODO 自動生成されたメソッド・スタブ
+		//
+		// }
+		//
+		// @Override
+		// public void mouseExited(MouseEvent e) {
+		// // TODO 自動生成されたメソッド・スタブ
+		//
+		// }
+		//
+		// @Override
+		// public void mouseEntered(MouseEvent e) {
+		// // TODO 自動生成されたメソッド・スタブ
+		//
+		// }
+		//
+		// @Override
+		// public void mouseClicked(MouseEvent e) {
+		// // TODO 自動生成されたメソッド・スタブ
+		//
+		// }
+		// });
+		textArea.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -461,17 +480,19 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			if (menuResource.containsKey(key)) {
 				String[] childMenu = menuResource.getProperty(key).split(",");
 				for (String child : childMenu) {
-					if ("".equals(child)) continue;
+					if ("".equals(child))
+						continue;
 					if (child.charAt(0) == '[' && child.charAt(child.length() - 1) == ']') {
-						String special = child.substring(1, child.length() -1);
-						if (special.length() == 0) continue;
+						String special = child.substring(1, child.length() - 1);
+						if (special.length() == 0)
+							continue;
 						if (special.length() == 1) {
-							//ラインセパレータ
+							// ラインセパレータ
 							if ("-".equals(special)) {
 								menu.addSeparator();
 								continue;
 							}
-							//スクリプト処理
+							// スクリプト処理
 							if ("*".equals(special)) {
 								File scriptDir = new File("script");
 								if (scriptDir.exists()) {
@@ -496,7 +517,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 						String scriptKey = key + "." + special;
 						if (menuResource.containsKey(scriptKey)) {
 							String scriptPath = menuResource.getProperty(scriptKey);
-							if (scriptPath == null) continue;
+							if (scriptPath == null)
+								continue;
 							int index = scriptPath.indexOf(':');
 							String param = null;
 							File scriptFile = null;
@@ -516,9 +538,9 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 						}
 					}
 					try {
-						if (menuResource.containsKey(key + "." + child +".ACTION")) {
-							menu.add(new JMenuItem(createAction(menuResource.getProperty(key + "."
-													+ child + ".ACTION"))));
+						if (menuResource.containsKey(key + "." + child + ".ACTION")) {
+							menu.add(new JMenuItem(
+									createAction(menuResource.getProperty(key + "." + child + ".ACTION"))));
 						} else {
 							menu.add(createMenu(key + "." + child));
 						}
@@ -542,17 +564,17 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		return null;
 	}
 
-	private Action createAction(String className) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+	private Action createAction(String className)
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Action action = actionMap.get(className);
 		if (action == null) {
-			action = (Action)Class
-			.forName(className)
-			.getConstructor(UIStore.class)
-			.newInstance(this);
+			action = (Action) Class.forName(className).getConstructor(UIStore.class).newInstance(this);
 			actionMap.put(className, action);
 		}
 		return action;
 	}
+
 	private Action createScriptAction(File file, String name, String param) throws IOException {
 		if (file.getName().contains("[h]")) {
 			return null;
@@ -581,6 +603,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			createScriptMenu(file, menu, null, null);
 		}
 	}
+
 	public void createScriptMenu(File file, JMenu menu, String name, String param) throws IOException {
 
 		if (file.exists()) {
@@ -605,25 +628,26 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			notifyList.add(action);
 		}
 	}
+
 	private void initButton(File file, Action action) {
 		String name = file.getName();
 		int index = name.indexOf("[b");
 		if (index >= 0) {
 			switch (name.substring(index + 2, index + 4)) {
 			case "t]":
-				//上
+				// 上
 				addButton(northPanel, action);
 				break;
 			case "b]":
-				//下
+				// 下
 				addButton(southPanel, action);
 				break;
 			case "l]":
-				//左
+				// 左
 				addButton(westPanel, action);
 				break;
 			case "r]":
-				//右
+				// 右
 				addButton(eastPanel, action);
 				break;
 			}
@@ -653,6 +677,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		}
 
 	}
+
 	/**
 	 * 名前を付けて保存
 	 */
@@ -662,7 +687,9 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectFile = chooser.getSelectedFile();
 			if (selectFile.exists()) {
-				//JOptionPane.showOptionDialog(textArea, "ファイルが存在します.上書きしますか?", "上書き確認", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane., ImageIcon., options, initialValue)
+				// JOptionPane.showOptionDialog(textArea, "ファイルが存在します.上書きしますか?",
+				// "上書き確認", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.,
+				// ImageIcon., options, initialValue)
 			}
 
 			try (FileOutputStream fos = new FileOutputStream(selectFile);) {
@@ -703,21 +730,17 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
+
 	@Override
 	public void setTitle(String fileName) {
 		StringBuffer strBuff = null;
 		if (fileName != null) {
 			strBuff = new StringBuffer(Constants.APP_NAME.length() + 3 + fileName.length());
-			strBuff.append(fileName)
-			.append(" - ")
-			.append(Constants.APP_NAME);
+			strBuff.append(fileName).append(" - ").append(Constants.APP_NAME);
 		} else {
 			String val = String.valueOf(value);
 			strBuff = new StringBuffer(Constants.APP_NAME.length() + 9 + 3 + val.length());
-			strBuff
-			.append(val)
-			.append(" no title  - ")
-			.append(Constants.APP_NAME);
+			strBuff.append(val).append(" no title  - ").append(Constants.APP_NAME);
 		}
 		super.setTitle(strBuff.toString());
 	}
@@ -738,7 +761,9 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		return notifyList;
 	}
 
-	/* (非 Javadoc)
+	/*
+	 * (非 Javadoc)
+	 *
 	 * @see com.uchicom.ui.util.UIStore#getResourceBundle()
 	 */
 	@Override
