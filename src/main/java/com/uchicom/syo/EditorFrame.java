@@ -44,13 +44,11 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument.DefaultDocumentEvent;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
-import javax.swing.text.Document;
 import javax.swing.undo.UndoManager;
 
 import com.uchicom.syo.action.script.ScriptAction;
 import com.uchicom.syo.util.FileUtil;
+import com.uchicom.syo.util.JBoxTextArea;
 import com.uchicom.syo.util.LineNumberView;
 import com.uchicom.ui.ResumeFrame;
 import com.uchicom.ui.util.ImageUtil;
@@ -65,29 +63,7 @@ import com.uchicom.ui.util.UIStore;
  */
 public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, ClipboardOwner {
 
-	private JTextArea textArea = new JTextArea() {
-		@Override
-		public String getSelectedText() {
-			Caret caret = getCaret();
-			String txt = null;
-			int p0 = Math.min(caret.getDot(), caret.getMark());
-			int p1 = Math.max(caret.getDot(), caret.getMark());
-			if (p0 != p1) {
-				try {
-					Document doc = getDocument();
-					if (getUI() instanceof BoxSelectionTextAreaUI) {
-						// TODO:ここで作成する
-
-					} else {
-						txt = doc.getText(p0, p1 - p0);
-					}
-				} catch (BadLocationException e) {
-					throw new IllegalArgumentException(e.getMessage());
-				}
-			}
-			return txt;
-		}
-	};
+	private JBoxTextArea textArea = new JBoxTextArea();
 	private UndoManager undoManager = new UndoManager();
 	private Properties menuResource;
 	private Properties resource;

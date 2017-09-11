@@ -25,6 +25,8 @@ import javax.swing.text.Segment;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 
+import com.uchicom.syo.util.TextUtil;
+
 import sun.swing.SwingUtilities2;
 
 /**
@@ -255,8 +257,8 @@ public class BoxView extends PlainView {
 							int startOffset = lineElement.getStartOffset();
 							String text = lineElement.getDocument().getText(startOffset,
 									lineElement.getEndOffset() - startOffset);
-							int s = getIndex(startWidth, text);
-							int e = getIndex(endWidth, text);
+							int s = TextUtil.getIndex(metrics, startWidth, text);
+							int e = TextUtil.getIndex(metrics, endWidth, text);
 							if (s > e) {
 								int tmp = s;
 								s = e;
@@ -281,8 +283,8 @@ public class BoxView extends PlainView {
 							String text = lineElement.getDocument().getText(startOffset,
 									lineElement.getEndOffset() - startOffset);
 
-							int s = getIndex(startWidth, text);
-							int e = getIndex(endWidth, text);
+							int s = TextUtil.getIndex(metrics, startWidth, text);
+							int e = TextUtil.getIndex(metrics, endWidth, text);
 							if (s > e) {
 								int tmp = s;
 								s = e;
@@ -295,6 +297,8 @@ public class BoxView extends PlainView {
 									startOffset + e, originalA, host,
 									this);
 						} catch (BadLocationException e) {
+							System.err.println(lineElement.toString());
+							System.err.println(e.getMessage());
 						}
 					} else {
 						dh.paintLayeredHighlights(g, lineElement.getStartOffset(), lineElement.getEndOffset() - 1,
@@ -313,25 +317,6 @@ public class BoxView extends PlainView {
 		}
 	}
 
-	/**
-	 * 文字の長さから文字数を算出する
-	 * @param width
-	 * @param text
-	 * @return
-	 */
-	public int getIndex(int width, String text) {
-		if (width == 0)
-			return 0;
-		int max = text.length();
-		int sumWidth = 0;
-		for (int i = 0; i < max; i++) {
-			sumWidth += metrics.charWidth(text.charAt(i));
-			if (sumWidth >= width) {
-				return i + 1;
-			}
-		}
-		return max - 1;
-	}
 
 	/**
 	 * The current longest line. This is used to calculate the preferred width
