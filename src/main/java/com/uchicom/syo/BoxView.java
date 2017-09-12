@@ -219,7 +219,7 @@ public class BoxView extends PlainView {
 			if (dh != null) {
 				Element lineElement = map.getElement(line);
 
-				if (lineElement.getStartOffset() <= sel0 && lineElement.getEndOffset() >= sel0) {
+				if (lineElement.getStartOffset() <= sel0 && lineElement.getEndOffset() > sel0) {
 					startIndex = sel0 - lineElement.getStartOffset();
 					try {
 						startWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(),
@@ -232,7 +232,7 @@ public class BoxView extends PlainView {
 //					System.out.println("start:" + startIndex);
 //					System.out.println("startWidth:" + startWidth);
 				}
-				if (lineElement.getStartOffset() <= sel1 && lineElement.getEndOffset() >= sel1) {
+				if (lineElement.getStartOffset() <= sel1 && lineElement.getEndOffset() > sel1) {
 					endIndex = sel1 - lineElement.getStartOffset();
 					try {
 						endWidth = metrics.stringWidth(lineElement.getDocument().getText(lineElement.getStartOffset(),

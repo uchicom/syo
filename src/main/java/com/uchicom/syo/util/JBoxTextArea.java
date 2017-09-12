@@ -34,9 +34,12 @@ public class JBoxTextArea extends JTextArea {
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			try {
 				String value = (String) clipboard.getData(DataFlavor.stringFlavor);
+				if (value.length() <= 0) {
+					return;
+				}
 				String[] lines = value.split("\n");
+
 				Document doc = getDocument();
-				doc.remove(p0, p1 - p0);
 				Element map = doc.getDefaultRootElement();
 				if (ui instanceof BoxSelectionTextAreaUI) {
 					FontMetrics metrics = getFontMetrics(getFont());
@@ -55,14 +58,15 @@ public class JBoxTextArea extends JTextArea {
 						for (int line = 0; line < lineCount; line++) {
 							if (dh != null) {
 								Element lineElement = map.getElement(line);
+								System.out.println("offset:" + lineElement.getStartOffset() + ":"+ lineElement.getEndOffset());
 
-								if (lineElement.getStartOffset() <= p0 && lineElement.getEndOffset() >= p0) {
+								if (lineElement.getStartOffset() <= p0 && lineElement.getEndOffset() > p0) {
 									startLine = line;
 									startIndex = p0 - lineElement.getStartOffset();
 									startWidth = metrics.stringWidth(lineElement.getDocument()
 											.getText(lineElement.getStartOffset(), p0 - lineElement.getStartOffset()));
 								}
-								if (lineElement.getStartOffset() <= p1 && lineElement.getEndOffset() >= p1) {
+								if (lineElement.getStartOffset() <= p1 && lineElement.getEndOffset() > p1) {
 									endLine = line;
 									endIndex = p1 - lineElement.getStartOffset();
 									endWidth = metrics.stringWidth(lineElement.getDocument()
@@ -79,25 +83,55 @@ public class JBoxTextArea extends JTextArea {
 								endWidth = tmp;
 							}
 							lineCount--;
+							int index = 0;
+							endLine = startLine + lines.length;
+							if (endLine > lineCount) {
+								endLine = lineCount;
+							}
 							System.out.println(startWidth + ":" + endWidth);
+							System.out.println(startLine + ";" + endLine);
+
 							for (int line = startLine; line <= endLine; line++) {
+								if (index >= lines.length) {
+
+									System.out.println("break:" + index);
+
+									break;
+								}
 								if (dh != null) {
 									Element lineElement = map.getElement(line);
 									try {
 										int startOffset = lineElement.getStartOffset();
 										String text = lineElement.getDocument().getText(startOffset,
 												lineElement.getEndOffset() - startOffset);
+										if (line == endLine && index < lines.length - 1) {
+											StringBuffer strBuff = new StringBuffer(value.length());
+											for (int i = index; i < lines.length; i++) {
+												if (strBuff.length() > 0) {
+													strBuff.append("\n");
+												}
+												strBuff.append(lines[i]);
+											}
+											System.out.println(strBuff.toString());
+											System.out.println("getIndex:" + TextUtil.getIndex(metrics, startWidth, text));
+											doc.insertString(startOffset + TextUtil.getIndex(metrics, startWidth, text),
+													strBuff.toString(), null);
+											System.out.println("行" + line + ":" + strBuff.toString());
+										} else {
+											System.out.println("getIndex:" + TextUtil.getIndex(metrics, startWidth, text));
 
-										System.out.println(
-												"最終行:" + TextUtil.getString(metrics, startWidth, endWidth, text));
+											System.out.println("行" + line + ":" + lines[index]);
+											doc.insertString(startOffset + TextUtil.getIndex(metrics, startWidth, text),
+													lines[index++], null);
+										}
 
-//												TextUtil.getString(metrics, startWidth, endWidth, text, lineElement));
 									} catch (BadLocationException e) {
 										System.err.println(lineElement.toString());
 										System.err.println(e.getMessage());
 									}
 								}
 							}
+
 						}
 					} catch (BadLocationException e) {
 						e.printStackTrace();
@@ -107,9 +141,6 @@ public class JBoxTextArea extends JTextArea {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			} catch (BadLocationException e1) {
-				// TODO 自動生成された catch ブロック
-				e1.printStackTrace();
 			}
 		} else {
 			super.paste();
@@ -146,13 +177,13 @@ public class JBoxTextArea extends JTextArea {
 								if (dh != null) {
 									Element lineElement = map.getElement(line);
 
-									if (lineElement.getStartOffset() <= p0 && lineElement.getEndOffset() >= p0) {
+									if (lineElement.getStartOffset() <= p0 && lineElement.getEndOffset() > p0) {
 										startLine = line;
 										startIndex = p0 - lineElement.getStartOffset();
 										startWidth = metrics.stringWidth(lineElement.getDocument().getText(
 												lineElement.getStartOffset(), p0 - lineElement.getStartOffset()));
 									}
-									if (lineElement.getStartOffset() <= p1 && lineElement.getEndOffset() >= p1) {
+									if (lineElement.getStartOffset() <= p1 && lineElement.getEndOffset() > p1) {
 										endLine = line;
 										endIndex = p1 - lineElement.getStartOffset();
 										endWidth = metrics.stringWidth(lineElement.getDocument().getText(
@@ -244,13 +275,13 @@ public class JBoxTextArea extends JTextArea {
 							if (dh != null) {
 								Element lineElement = map.getElement(line);
 
-								if (lineElement.getStartOffset() <= sel0 && lineElement.getEndOffset() >= sel0) {
+								if (lineElement.getStartOffset() <= sel0 && lineElement.getEndOffset() > sel0) {
 									startLine = line;
 									startIndex = sel0 - lineElement.getStartOffset();
 									startWidth = metrics.stringWidth(lineElement.getDocument().getText(
 											lineElement.getStartOffset(), sel0 - lineElement.getStartOffset()));
 								}
-								if (lineElement.getStartOffset() <= sel1 && lineElement.getEndOffset() >= sel1) {
+								if (lineElement.getStartOffset() <= sel1 && lineElement.getEndOffset() > sel1) {
 									endLine = line;
 									endIndex = sel1 - lineElement.getStartOffset();
 									endWidth = metrics.stringWidth(lineElement.getDocument().getText(
@@ -302,10 +333,4 @@ public class JBoxTextArea extends JTextArea {
 		}
 		return txt;
 	}
-	//
-	// private int getWidth() {
-	// return metrics.stringWidth(lineElement.getDocument().getText(
-	// lineElement.getStartOffset(), sel1 - lineElement.getStartOffset()));
-	//
-	// }
 }
