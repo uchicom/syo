@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
+import com.uchicom.ui.util.DialogUtil;
 import com.uchicom.ui.util.UIStore;
 
 /**
@@ -44,7 +44,7 @@ public class DiffAction extends AbstractResourceAction<EditorFrame> {
 		chooser1.showOpenDialog(uiStore.getMainComponent());
 		File file1 = chooser1.getSelectedFile();
 		if (file1 == null) {
-			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較元が選択されませんでした");
+			DialogUtil.showMessageDialog(uiStore.getMainComponent(), "比較元が選択されませんでした");
 			return;
 		}
 		JFileChooser chooser2 = new JFileChooser("比較先を選択してください。");
@@ -52,11 +52,11 @@ public class DiffAction extends AbstractResourceAction<EditorFrame> {
 		chooser2.showOpenDialog(uiStore.getMainComponent());
 		File file2 = chooser2.getSelectedFile();
 		if (file2 == null) {
-			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較先が選択されませんでした");
+			DialogUtil.showMessageDialog(uiStore.getMainComponent(), "比較先が選択されませんでした");
 			return;
 		}
 		if (file1.equals(file2)) {
-			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較元と比較先が同じです");
+			DialogUtil.showMessageDialog(uiStore.getMainComponent(), "比較元と比較先が同じです");
 			return;
 		}
 
@@ -65,7 +65,7 @@ public class DiffAction extends AbstractResourceAction<EditorFrame> {
 			createFileMap(file1.getCanonicalPath().length(), file1Map, file1);
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較元のファイル検索でエラーが発生しました。\n" + e.getMessage());
+			DialogUtil.showMessageDialog(uiStore.getMainComponent(), "比較元のファイル検索でエラーが発生しました。\n" + e.getMessage());
 			return;
 		}
 		Map<String, File> file2Map = new HashMap<>();
@@ -73,7 +73,7 @@ public class DiffAction extends AbstractResourceAction<EditorFrame> {
 			createFileMap(file2.getCanonicalPath().length(), file2Map, file2);
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較先のファイル検索でエラーが発生しました。\n" + e.getMessage());
+			DialogUtil.showMessageDialog(uiStore.getMainComponent(), "比較先のファイル検索でエラーが発生しました。\n" + e.getMessage());
 			return;
 		}
 		Set<String> file1Set = file1Map.keySet();
@@ -91,7 +91,7 @@ public class DiffAction extends AbstractResourceAction<EditorFrame> {
 			strBuff.append(file1.getCanonicalPath());
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較元のファイル検索でエラーが発生しました。\n" + e.getMessage());
+			DialogUtil.showMessageDialog(uiStore.getMainComponent(), "比較元のファイル検索でエラーが発生しました。\n" + e.getMessage());
 			return;
 		}
 		strBuff.append("\n比較先:");
@@ -99,7 +99,7 @@ public class DiffAction extends AbstractResourceAction<EditorFrame> {
 			strBuff.append(file2.getCanonicalPath());
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(uiStore.getMainComponent(), "比較先のファイル検索でエラーが発生しました。\n" + e.getMessage());
+			DialogUtil.showMessageDialog(uiStore.getMainComponent(), "比較先のファイル検索でエラーが発生しました。\n" + e.getMessage());
 			return;
 		}
 		strBuff.append("\n\n比較元のみ存在\n");
@@ -137,7 +137,7 @@ public class DiffAction extends AbstractResourceAction<EditorFrame> {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(uiStore.getMainComponent(), "ファイル比較でエラーが発生しました。\n" + e.getMessage());
+				DialogUtil.showMessageDialog(uiStore.getMainComponent(), "ファイル比較でエラーが発生しました。\n" + e.getMessage());
 				return;
 			}
 		});

@@ -51,8 +51,8 @@ import com.uchicom.syo.util.FileUtil;
 import com.uchicom.syo.util.LineNumberView;
 import com.uchicom.ui.ResumeFrame;
 import com.uchicom.ui.util.ImageUtil;
-import com.uchicom.ui.util.ResourceUtil;
 import com.uchicom.ui.util.UIStore;
+import com.uchicom.util.ResourceUtil;
 
 /**
  * テキストエディタ.

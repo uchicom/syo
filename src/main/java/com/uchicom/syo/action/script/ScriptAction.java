@@ -13,10 +13,10 @@ import java.util.Properties;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import com.uchicom.syo.EditorFrame;
+import com.uchicom.ui.util.DialogUtil;
 import com.uchicom.ui.util.UIStore;
 
 /**
@@ -80,7 +80,7 @@ public class ScriptAction extends AbstractAction {
 			se.put("textArea", textArea);
 			se.eval(reader);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog((Component)uiStore, e.toString());
+			DialogUtil.showMessageDialog((Component)uiStore, e.toString());
 		}
 		//プロパティの保存
 		if (properties.isEmpty()) {
@@ -92,7 +92,7 @@ public class ScriptAction extends AbstractAction {
 				try {
 					propertyFile.createNewFile();
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(textArea, e.toString());
+					DialogUtil.showMessageDialog(textArea, e.toString());
 				}
 			}
 			try (FileOutputStream fos = new FileOutputStream(propertyFile)) {
