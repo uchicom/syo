@@ -34,6 +34,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -89,8 +90,9 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	private static final String CONF_FILE_PATH = "./conf/syo" + PROP_EXT;
 
 	private File file;
-	private boolean selected = false;
+	private boolean selected;
 	private int value;
+	private int editCount;
 
 	public EditorFrame(int value) {
 		super(new File(CONF_FILE_PATH), "syo.window");
@@ -115,7 +117,14 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			e.printStackTrace();
 		}
 		if (file != null) {
-			setTitle(file.getName());
+			// ファイル読み込み
+			try {
+				textArea.setText(FileUtil.readFile(file, getCharset()));
+				textArea.setCaretPosition(0);
+				setTitle(file.getName());
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
 		} else {
 			setTitle(null);
 		}
@@ -131,7 +140,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 				if (e instanceof DefaultDocumentEvent) {
 					DefaultDocumentEvent de = (DefaultDocumentEvent) e;
 					undoManager.addEdit(de);
-					// TODO 元に戻すとかのenable制御
+					editCount++;
+					edited(1);
 				}
 			}
 
@@ -139,6 +149,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 				if (e instanceof DefaultDocumentEvent) {
 					DefaultDocumentEvent de = (DefaultDocumentEvent) e;
 					undoManager.addEdit(de);
+					editCount++;
+					edited(1);
 				}
 			}
 
@@ -323,16 +335,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		panel.add(scrollPane, BorderLayout.CENTER);
 		getContentPane().add(panel);
 		textArea.getFont();
-		// ファイル読み込み
-		if (file != null) {
-			try {
-				textArea.setText(FileUtil.readFile(file, getCharset()));
-				textArea.setCaretPosition(0);
-				setTitle(file.getName() + " - " + Constants.APP_NAME);
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-			}
-		}
+
 		pack();
 		if (rectangle != null) {
 			setBounds(rectangle);
@@ -644,6 +647,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			try (FileOutputStream fos = new FileOutputStream(file);) {
 				fos.write(textArea.getText().getBytes("utf-8"));
 				fos.flush();
+				editCount = 0;
+				setTitle();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -669,6 +674,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 				fos.flush();
 
 				setFile(selectFile);
+				editCount = 0;
+				setTitle();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -705,20 +712,39 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	@Override
 	public void setTitle(String fileName) {
 		StringBuffer strBuff = null;
+		int count = 0;
+		if (editCount > 0) {
+			count += 2;
+		}
 		if (fileName != null) {
-			strBuff = new StringBuffer(Constants.APP_NAME.length() + 3 + fileName.length());
+			count += 3;
+			strBuff = new StringBuffer(Constants.APP_NAME.length() + fileName.length() + count);
+			if (editCount != 0) {
+				strBuff.append("* ");
+			}
 			strBuff.append(fileName)
 			.append(" - ")
 			.append(Constants.APP_NAME);
 		} else {
+			count += 9 + 3;
 			String val = String.valueOf(value);
-			strBuff = new StringBuffer(Constants.APP_NAME.length() + 9 + 3 + val.length());
+			strBuff = new StringBuffer(Constants.APP_NAME.length() + val.length() + count);
+			if (editCount != 0) {
+				strBuff.append("* ");
+			}
 			strBuff
 			.append(val)
 			.append(" no title  - ")
 			.append(Constants.APP_NAME);
 		}
 		super.setTitle(strBuff.toString());
+	}
+	public void setTitle() {
+		if (file == null) {
+			setTitle(null);
+		} else {
+			setTitle(file.getName());
+		}
 	}
 
 	/**
@@ -747,5 +773,47 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 
 	public String getCharset() {
 		return config.getProperty("charset");
+	}
+	
+	public void redo() {
+		if (undoManager.canRedo()) {
+			undoManager.redo();
+			editCount++;
+			edited(1);
+		}
+	}
+	public void undo() {
+		if (undoManager.canUndo()) {
+			undoManager.undo();
+			editCount--;
+			edited(0);
+		}
+	}
+	public static final int MINUS = 0;
+	public static final int PLUS = 1;
+	public void edited(int compareType) {
+		if (compareType == MINUS) {
+			if (editCount == 0 || editCount == -1) {
+				setTitle();
+			}
+		} else {
+			if (editCount == 0 || editCount == 1) {
+				setTitle();
+			}
+		}
+	}
+	
+	@Override
+	public void dispose() {
+		if (editCount != 0) {
+			//上書き保存か別名保存か
+			int result = JOptionPane.showConfirmDialog(this, "変更されています。保存しますか？", "保存の確認", JOptionPane.YES_NO_CANCEL_OPTION);
+			if (JOptionPane.YES_OPTION == result) {
+				overwrite();
+			} else if (JOptionPane.CANCEL_OPTION == result) {
+				return;
+			}
+		}
+		super.dispose();
 	}
 }

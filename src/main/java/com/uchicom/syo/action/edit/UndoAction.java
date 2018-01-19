@@ -13,8 +13,6 @@ public class UndoAction extends AbstractDoAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (undoManager.canUndo()) {
-			undoManager.undo();
-		}
+		uiStore.getMainComponent().undo();
 	}
 }

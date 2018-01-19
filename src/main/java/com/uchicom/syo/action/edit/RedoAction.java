@@ -13,8 +13,6 @@ public class RedoAction extends AbstractDoAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (undoManager.canRedo()) {
-			undoManager.redo();
-		}
+		uiStore.getMainComponent().redo();
 	}
 }
