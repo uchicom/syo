@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -64,7 +66,6 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 
 	private JTextArea textArea = new JTextArea();
 	private UndoManager undoManager = new UndoManager();
-	private Properties menuResource;
 	private Properties resource;
 	private static final ResourceBundle resourceBundle = ResourceBundle
 			.getBundle("com.uchicom.syo.resource");
@@ -131,8 +132,9 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		//他のファイルの読み込みをどうするのか
-		menuResource = ResourceUtil.createProperties(new File("./conf/menu.properties"), "UTF-8");
-		resource = ResourceUtil.createProperties(new File("./conf/resource.properties"), "UTF-8");
+		resource = ResourceUtil.createProperties(
+				getClass().getClassLoader().getResourceAsStream("com/uchicom/syo/resource.properties"), "UTF-8");
+
 		textArea.setFont(new Font("Monospaced", Font.PLAIN,  12));//TODO 設定ファイル化
 		textArea.setTabSize(4);//TODO 設定ファイル化
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
@@ -299,11 +301,11 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		});
 		// メニューの準備（ファイル、編集、スクリプト、ヘルプ）
 		JMenuBar menuBar = new JMenuBar();
-		String[] menus = menuResource.getProperty("menu").split(",");
+		String[] menus = resource.getProperty("menu").split(",");
 		for (String menuProp : menus) {
 			menuBar.add(createMenu("menu." + menuProp));
 		}
-		menus = menuResource.getProperty("popup").split(",");
+		menus = resource.getProperty("popup").split(",");
 		for (String menuProp : menus) {
 			if (menuProp.equals("[-]")) {
 				popupMenu.addSeparator();
@@ -460,8 +462,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		String name = key + ".name";
 		if (resource.containsKey(name)) {
 			JMenu menu = new JMenu(resource.getProperty(name));
-			if (menuResource.containsKey(key)) {
-				String[] childMenu = menuResource.getProperty(key).split(",");
+			if (resource.containsKey(key)) {
+				String[] childMenu = resource.getProperty(key).split(",");
 				for (String child : childMenu) {
 					if ("".equals(child)) continue;
 					if (child.charAt(0) == '[' && child.charAt(child.length() - 1) == ']') {
@@ -496,8 +498,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 							special = special.substring(0, nameIndex);
 						}
 						String scriptKey = key + "." + special;
-						if (menuResource.containsKey(scriptKey)) {
-							String scriptPath = menuResource.getProperty(scriptKey);
+						if (resource.containsKey(scriptKey)) {
+							String scriptPath = resource.getProperty(scriptKey);
 							if (scriptPath == null) continue;
 							int index = scriptPath.indexOf(':');
 							String param = null;
@@ -518,8 +520,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 						}
 					}
 					try {
-						if (menuResource.containsKey(key + "." + child +".ACTION")) {
-							menu.add(new JMenuItem(createAction(menuResource.getProperty(key + "."
+						if (resource.containsKey(key + "." + child +".ACTION")) {
+							menu.add(new JMenuItem(createAction(resource.getProperty(key + "."
 													+ child + ".ACTION"))));
 						} else {
 							menu.add(createMenu(key + "." + child));
@@ -533,8 +535,8 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			return menu;
 		} else {
 			try {
-				if (menuResource.containsKey(key + ".ACTION")) {
-					return new JMenuItem(createAction(menuResource.getProperty(key + ".ACTION")));
+				if (resource.containsKey(key + ".ACTION")) {
+					return new JMenuItem(createAction(resource.getProperty(key + ".ACTION")));
 				}
 			} catch (Exception e1) {
 				// TODO 自動生成された catch ブロック
@@ -815,5 +817,21 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			}
 		}
 		super.dispose();
+	}
+	
+	public void openCharset() {
+		String[] charsets = Charset.availableCharsets().keySet().toArray(new String[0]);
+		JList<String> list = new JList<>(charsets);
+		int result = JOptionPane.showOptionDialog(this, "文字コードを選択してください", "文字コード選択", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{new JScrollPane(list), "OK"}, "SJIS");
+		System.out.println(result);
+		if (result == 1) {
+			System.out.println(list.getSelectedValue());
+			try {
+				textArea.setText(FileUtil.readFile(file, list.getSelectedValue()));
+				textArea.setCaretPosition(0);
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 }
