@@ -12,6 +12,10 @@ import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 public abstract class AbstractDoAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	UndoManager undoManager;
 

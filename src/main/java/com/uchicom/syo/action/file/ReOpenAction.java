@@ -12,6 +12,10 @@ import com.uchicom.ui.util.UIStore;
  *
  */
 public class ReOpenAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param uiStore

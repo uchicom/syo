@@ -19,6 +19,10 @@ import com.uchicom.ui.util.UIStore;
  *
  */
 public class CsvViewDisplayAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param uiStore

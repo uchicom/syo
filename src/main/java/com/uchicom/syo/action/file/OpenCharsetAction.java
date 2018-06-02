@@ -13,6 +13,10 @@ import com.uchicom.ui.util.UIStore;
  *
  */
 public class OpenCharsetAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public OpenCharsetAction(UIStore<EditorFrame> uiStore) {
 	    super(uiStore);

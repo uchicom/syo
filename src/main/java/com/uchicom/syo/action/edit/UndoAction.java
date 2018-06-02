@@ -7,6 +7,10 @@ import com.uchicom.syo.EditorFrame;
 import com.uchicom.ui.util.UIStore;
 
 public class UndoAction extends AbstractDoAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public UndoAction(UIStore<EditorFrame> uiStore) {
 		super(uiStore, "undo");

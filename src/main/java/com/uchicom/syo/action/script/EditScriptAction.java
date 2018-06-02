@@ -8,6 +8,10 @@ import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
 public class EditScriptAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public EditScriptAction(UIStore<EditorFrame> uiStore) {
         super(uiStore);
 	}

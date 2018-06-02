@@ -12,6 +12,10 @@ import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 
 public class HelpAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public HelpAction(UIStore<EditorFrame> uiStore) {
 		super(uiStore);

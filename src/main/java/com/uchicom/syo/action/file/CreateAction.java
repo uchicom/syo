@@ -14,6 +14,10 @@ import com.uchicom.ui.util.UIStore;
  *
  */
 public class CreateAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public CreateAction(UIStore<EditorFrame> uiStore) {
 	    super(uiStore);

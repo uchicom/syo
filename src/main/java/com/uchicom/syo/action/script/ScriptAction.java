@@ -25,6 +25,10 @@ import com.uchicom.ui.util.UIStore;
  *
  */
 public class ScriptAction extends AbstractAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private File file;
 	private UIStore<EditorFrame> uiStore;

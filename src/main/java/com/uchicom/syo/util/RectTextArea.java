@@ -12,6 +12,10 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
 
 public class RectTextArea extends JTextArea {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public RectTextArea() {
 		// TODO 自動生成されたコンストラクター・スタブ

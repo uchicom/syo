@@ -10,6 +10,10 @@ import com.uchicom.ui.util.DialogUtil;
 import com.uchicom.ui.util.UIStore;
 
 public class VersionAction extends AbstractResourceAction<EditorFrame> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
     public VersionAction(UIStore<EditorFrame> uiStore) {
     	super(uiStore);
     }

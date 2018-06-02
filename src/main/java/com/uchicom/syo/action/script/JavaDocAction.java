@@ -10,6 +10,10 @@ import javax.swing.AbstractAction;
  *
  */
 public class JavaDocAction extends AbstractAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/* (非 Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

@@ -64,6 +64,10 @@ import com.uchicom.util.ResourceUtil;
  */
 public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, ClipboardOwner {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea textArea = new JTextArea();
 	private UndoManager undoManager = new UndoManager();
 	private Properties resource;
@@ -164,6 +168,11 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 
 		//ドラッグアンドドロップでファイルオープン機能
 		TransferHandler handler = new TransferHandler() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void exportToClipboard(JComponent comp, Clipboard clip,
 					int action) {
