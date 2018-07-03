@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 
 public class FileUtil {
 
-	public static String readFile(File file, String charset) throws UnsupportedEncodingException {
+	public static String readFile(File file, String charsetName) throws UnsupportedEncodingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try (FileInputStream is = new FileInputStream(file)) {
 			int length = 0;
@@ -24,6 +24,20 @@ public class FileUtil {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		return new String(baos.toByteArray(), Charset.forName(charset));
+		Charset charset = Charset.forName(charsetName);
+		String value = new String(baos.toByteArray(), charset);
+		if (value.getBytes(charset).length == baos.size()) {
+			return value;
+		}
+
+		charset = Charset.forName("SJIS");
+		value = new String(baos.toByteArray(), charset);
+		if (value.getBytes(charset).length == baos.size()) {
+			return value;
+		}
+		charset = Charset.forName("UTF8");
+		value = new String(baos.toByteArray(), charset);
+		return value;
+
 	}
 }
