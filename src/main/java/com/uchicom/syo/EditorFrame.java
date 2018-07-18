@@ -843,4 +843,13 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			}
 		}
 	}
+	
+	public void search() {
+		//TODO 検索処理未実装
+		//置換と同じダイアログを使用する。表示を切り替えるのみ
+	}
+	public void replace() {
+		//TODO 置換処理未実装
+		//検索に置換後の文字列を入力するボックスを追加する。
+	}
 }
