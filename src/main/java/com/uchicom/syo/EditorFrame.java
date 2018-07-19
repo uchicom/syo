@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +54,7 @@ import com.uchicom.syo.util.JBoxTextArea;
 import com.uchicom.syo.util.LineNumberView;
 import com.uchicom.ui.ResumeFrame;
 import com.uchicom.ui.util.ImageUtil;
+import com.uchicom.ui.util.MenuUtil;
 import com.uchicom.ui.util.UIStore;
 import com.uchicom.util.ResourceUtil;
 
@@ -116,8 +116,12 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 		initComponents(file, rectangle);
 	}
 
+	/**
+	 * コンポーネント初期化.
+	 * @param file
+	 * @param rectangle
+	 */
 	private void initComponents(File file, Rectangle rectangle) {
-		textArea.setUI(new BoxSelectionTextAreaUI());
 		try {
 			setIconImage(ImageUtil.getImageIcon("images/icon.png").getImage());
 		} catch (Exception e) {
@@ -463,7 +467,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	}
 
 	private JMenuItem createMenu(String key) {
-		String name = key + ".name";
+		String name = key + ".NAME";
 		if (resource.containsKey(name)) {
 			JMenu menu = new JMenu(resource.getProperty(name));
 			if (resource.containsKey(key)) {
@@ -525,24 +529,21 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 							continue;
 						}
 					}
-					try {
-						if (resource.containsKey(key + "." + child +".ACTION")) {
-							menu.add(new JMenuItem(createAction(resource.getProperty(key + "."
-													+ child + ".ACTION"))));
-						} else {
-							menu.add(createMenu(key + "." + child));
-						}
-					} catch (Exception e1) {
-						// TODO 自動生成された catch ブロック
-						e1.printStackTrace();
-					}
+					menu.add(createMenu(key + "." + child));
 				}
 			}
 			return menu;
 		} else {
 			try {
-				if (resource.containsKey(key + ".ACTION")) {
-					return new JMenuItem(createAction(resource.getProperty(key + ".ACTION")));
+				String actionKey = key + ".ACTION";
+				Action action = MenuUtil.createAction(this, resource, actionMap, actionKey);
+				if (action != null) {
+					String typeKey = key + ".TYPE";
+					if (resource.containsKey(typeKey)) {
+						return (JMenuItem) Class.forName(resource.getProperty(typeKey)).getConstructor(Action.class).newInstance(action);
+					} else {
+						return new JMenuItem(action);
+					}
 				}
 			} catch (Exception e1) {
 				// TODO 自動生成された catch ブロック
@@ -550,17 +551,6 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 			}
 		}
 		return null;
-	}
-
-	private Action createAction(String className)
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, ClassNotFoundException {
-		Action action = actionMap.get(className);
-		if (action == null) {
-			action = (Action) Class.forName(className).getConstructor(UIStore.class).newInstance(this);
-			actionMap.put(className, action);
-		}
-		return action;
 	}
 
 	private Action createScriptAction(File file, String name, String param) throws IOException {
