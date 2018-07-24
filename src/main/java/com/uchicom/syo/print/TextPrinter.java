@@ -1,5 +1,5 @@
 // (c) 2015 uchicom
-package com.uchicom.syo;
+package com.uchicom.syo.print;
 
 import java.awt.Graphics;
 import java.awt.print.PageFormat;
@@ -8,6 +8,7 @@ import java.awt.print.PrinterException;
 
 import javax.swing.JTextArea;
 
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.util.UIStore;
 
 public class TextPrinter implements Printable {

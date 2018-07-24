@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.undo.UndoManager;
 
-import com.uchicom.syo.EditorFrame;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 public abstract class AbstractDoAction extends AbstractResourceAction<EditorFrame> {

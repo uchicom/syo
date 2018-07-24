@@ -17,7 +17,7 @@ import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 import javax.swing.text.LayeredHighlighter;
 
-import com.uchicom.syo.BoxSelectionTextAreaUI;
+import com.uchicom.syo.ui.BoxSelectionTextAreaUI;
 
 /**
  * @author uchicom: Shigeki Uchiyama

@@ -1,7 +1,8 @@
 // (c) 2015 uchicom
-package com.uchicom.syo;
+package com.uchicom.syo.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -48,6 +49,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument.DefaultDocumentEvent;
 import javax.swing.undo.UndoManager;
 
+import com.uchicom.syo.Constants;
+import com.uchicom.syo.Starter;
 import com.uchicom.syo.action.script.ScriptAction;
 import com.uchicom.syo.util.FileUtil;
 import com.uchicom.syo.util.JBoxTextArea;
@@ -325,7 +328,6 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 				popupMenu.add(menu);
 			}
 		}
-
 		setJMenuBar(menuBar);
 		JPanel panel = new JPanel(new BorderLayout());
 		if (northPanel.getComponentCount() > 0) {
@@ -622,11 +624,11 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 				break;
 			case "l]":
 				// 左
-				addButton(westPanel, action);
+				addButton2(westPanel, action);
 				break;
 			case "r]":
 				// 右
-				addButton(eastPanel, action);
+				addButton2(eastPanel, action);
 				break;
 			}
 		}
@@ -635,6 +637,11 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 
 	private void addButton(JPanel panel, Action action) {
 		JButton button = new JButton(action);
+		button.setFocusable(false);
+		panel.add(button);
+	}
+	private void addButton2(JPanel panel, Action action) {
+		JButton button = new JButton2(action);
 		button.setFocusable(false);
 		panel.add(button);
 	}

@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
-import com.uchicom.syo.EditorFrame;
-import com.uchicom.syo.TextPrinter;
+import com.uchicom.syo.print.TextPrinter;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 

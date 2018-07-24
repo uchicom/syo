@@ -4,7 +4,7 @@ package com.uchicom.syo.action.help;
 import java.awt.event.ActionEvent;
 
 import com.uchicom.syo.Constants;
-import com.uchicom.syo.EditorFrame;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.DialogUtil;
 import com.uchicom.ui.util.UIStore;

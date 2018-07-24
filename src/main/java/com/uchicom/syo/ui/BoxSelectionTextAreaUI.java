@@ -1,5 +1,5 @@
 // (c) 2017 uchicom
-package com.uchicom.syo;
+package com.uchicom.syo.ui;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;

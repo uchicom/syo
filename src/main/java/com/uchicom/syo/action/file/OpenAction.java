@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 
-import com.uchicom.syo.EditorFrame;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.syo.util.FileUtil;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;

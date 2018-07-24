@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
+import com.uchicom.syo.ui.EditorFrame;
+
 public class Context {
 	private static Context context = new Context();
 

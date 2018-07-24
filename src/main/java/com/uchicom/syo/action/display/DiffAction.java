@@ -15,7 +15,7 @@ import java.util.Set;
 
 import javax.swing.JFileChooser;
 
-import com.uchicom.syo.EditorFrame;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.DialogUtil;
 import com.uchicom.ui.util.UIStore;

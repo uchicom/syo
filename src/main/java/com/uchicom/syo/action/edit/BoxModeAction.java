@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.plaf.TextUI;
 
-import com.uchicom.syo.BoxSelectionTextAreaUI;
-import com.uchicom.syo.EditorFrame;
+import com.uchicom.syo.ui.BoxSelectionTextAreaUI;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.action.AbstractResourceAction;
 import com.uchicom.ui.util.UIStore;
 

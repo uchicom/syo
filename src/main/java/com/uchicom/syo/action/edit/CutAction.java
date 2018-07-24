@@ -3,7 +3,7 @@ package com.uchicom.syo.action.edit;
 
 import java.awt.event.ActionEvent;
 
-import com.uchicom.syo.EditorFrame;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.util.UIStore;
 
 public class CutAction extends AbstractDoAction {

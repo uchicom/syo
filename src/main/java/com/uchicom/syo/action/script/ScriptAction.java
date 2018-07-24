@@ -15,7 +15,7 @@ import javax.script.ScriptEngineManager;
 import javax.swing.AbstractAction;
 import javax.swing.JTextArea;
 
-import com.uchicom.syo.EditorFrame;
+import com.uchicom.syo.ui.EditorFrame;
 import com.uchicom.ui.util.DialogUtil;
 import com.uchicom.ui.util.UIStore;
 
