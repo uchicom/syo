@@ -24,6 +24,11 @@ import com.uchicom.syo.ui.BoxSelectionTextAreaUI;
  *
  */
 public class JBoxTextArea extends JTextArea {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void paste() {
 		if (getUI() instanceof BoxSelectionTextAreaUI) {

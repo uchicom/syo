@@ -31,6 +31,10 @@ public class OpenAction extends AbstractResourceAction<EditorFrame> {
 	public void actionPerformed(ActionEvent e) {
 		JTextArea textArea = uiStore.getMainComponent().getTextArea();
 		JFileChooser chooser = new JFileChooser();
+		String current = uiStore.getMainComponent().getString("current");
+		if (current != null) {
+			chooser.setCurrentDirectory(new File(current));
+		}
 		int result = chooser.showOpenDialog(uiStore.getMainComponent());
 		if (result != JFileChooser.CANCEL_OPTION) {
 			File file = chooser.getSelectedFile();

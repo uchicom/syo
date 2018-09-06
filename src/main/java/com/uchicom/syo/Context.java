@@ -17,50 +17,42 @@ public class Context {
 
 	private Map<File, EditorFrame> fileFrameMap = new HashMap<>();
 	private List<EditorFrame> notitleList = new ArrayList<>();
+
 	private Context() {
 
 	}
+
 	public static Context getInstance() {
 		return context;
 	}
 
 	/**
 	 * ファイルを指定して起動する.
+	 * 
 	 * @param file
 	 */
 	public void start(File file) {
-		synchronized (fileFrameMap) {
-			if (fileFrameMap.containsKey(file)) {
-				SwingUtilities.invokeLater(() -> {
-					EditorFrame frame = fileFrameMap.get(file);
-					frame.setVisible(true);
-				});
-			} else {
-				SwingUtilities.invokeLater(() -> {
-					EditorFrame frame = new EditorFrame(file);
-					fileFrameMap.put(file, frame);
-					frame.setVisible(true);
-				});
-			}
-		}
+		start(file, null);
 	}
+
 	public void start(File file, Rectangle rectangle) {
-		synchronized (fileFrameMap) {
-			if (fileFrameMap.containsKey(file)) {
-				SwingUtilities.invokeLater(() -> {
-					EditorFrame frame = fileFrameMap.get(file);
-					frame.setBounds(rectangle);
-					frame.setVisible(true);
-				});
-			} else {
-				SwingUtilities.invokeLater(() -> {
-					EditorFrame frame = new EditorFrame(file, rectangle);
+		SwingUtilities.invokeLater(() -> {
+			synchronized (fileFrameMap) {
+				EditorFrame frame = null;
+				if (fileFrameMap.containsKey(file)) {
+					frame = fileFrameMap.get(file);
+				} else {
+					frame = new EditorFrame(file, rectangle);
 					fileFrameMap.put(file, frame);
-					frame.setVisible(true);
-				});
+				}
+				if (rectangle != null) {
+					frame.setBounds(rectangle);
+				}
+				frame.setVisible(true);
 			}
-		}
+		});
 	}
+
 	public void start() {
 		SwingUtilities.invokeLater(() -> {
 			EditorFrame frame = new EditorFrame(notitleList.size());

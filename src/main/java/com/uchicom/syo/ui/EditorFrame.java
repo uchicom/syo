@@ -2,7 +2,6 @@
 package com.uchicom.syo.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -116,6 +115,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	public EditorFrame(File file, Rectangle rectangle) {
 		super(new File(CONF_FILE_PATH), "syo.window");
 		this.file = file;
+		config.setProperty("current", file.getParentFile().getPath());
 		initComponents(file, rectangle);
 	}
 
@@ -670,6 +670,11 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	 */
 	public void save() {
 		JFileChooser chooser = new JFileChooser();
+
+		String current = getString("current");
+		if (current != null) {
+			chooser.setCurrentDirectory(new File(current));
+		}
 		int result = chooser.showSaveDialog(textArea);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectFile = chooser.getSelectedFile();
