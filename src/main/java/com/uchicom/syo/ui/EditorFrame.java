@@ -259,6 +259,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 									start = 1;
 									setTitle(file.getName());
 									EditorFrame.this.file = file;
+									config.setProperty("current", file.getParentFile().getPath());
 								}
 								Rectangle rectangle = (Rectangle) EditorFrame.this.getBounds().clone();
 								for (int i = start; i < fileList.size(); i++) {
