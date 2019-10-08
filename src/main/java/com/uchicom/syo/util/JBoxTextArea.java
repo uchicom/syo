@@ -246,7 +246,7 @@ public class JBoxTextArea extends JTextArea {
 				}
 			}
 		} else {
-			super.paste();
+			super.cut();
 		}
 	}
 
