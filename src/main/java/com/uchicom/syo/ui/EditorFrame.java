@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -55,7 +56,6 @@ import com.uchicom.syo.util.FileUtil;
 import com.uchicom.syo.util.JBoxTextArea;
 import com.uchicom.syo.util.LineNumberView;
 import com.uchicom.ui.ResumeFrame;
-import com.uchicom.ui.util.ImageUtil;
 import com.uchicom.ui.util.MenuUtil;
 import com.uchicom.ui.util.UIStore;
 import com.uchicom.util.ResourceUtil;
@@ -126,7 +126,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 	 */
 	private void initComponents(File file, Rectangle rectangle) {
 		try {
-			setIconImage(ImageUtil.getImageIcon("images/icon.png").getImage());
+			setIconImage(ImageIO.read(getClass().getResourceAsStream("/images/icon.png")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -146,7 +146,7 @@ public class EditorFrame extends ResumeFrame implements UIStore<EditorFrame>, Cl
 
 		//他のファイルの読み込みをどうするのか
 		resource = ResourceUtil.createProperties(
-				getClass().getClassLoader().getResourceAsStream("com/uchicom/syo/resource.properties"), "UTF-8");
+				getClass().getResourceAsStream("/com/uchicom/syo/resource.properties"), "UTF-8");
 		textArea.setFont(new Font(getString("font.size"), getInt("font.style", Font.PLAIN), getInt("font.size", 12)));
 		textArea.setTabSize(getInt("tab.size", 4));
 		textArea.getDocument().addDocumentListener(new DocumentListener() {

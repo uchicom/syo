@@ -27,7 +27,8 @@ import javax.swing.text.View;
 
 import com.uchicom.syo.util.TextUtil;
 
-import sun.swing.SwingUtilities2;
+//import sun.swing.SwingUtilities2;
+
 
 /**
  * @author uchicom: Shigeki Uchiyama
@@ -90,7 +91,7 @@ public class BoxView extends PlainView {
 		AttributeSet attr = elem.getAttributes();
 		if (isComposedTextAttributeDefined(attr)) {
 			g.setColor(unselected);
-			x = drawComposedText(this, attr, g, x, y, p0 - elem.getStartOffset(), p1 - elem.getStartOffset());
+//			x = drawComposedText(this, attr, g, x, y, p0 - elem.getStartOffset(), p1 - elem.getStartOffset());
 		} else {
 			if (sel0 == sel1 || selected == unselected) {
 				// no selection, or it is invisible
@@ -131,18 +132,18 @@ public class BoxView extends PlainView {
 		return ((as != null) && (as.isDefined(StyleConstants.ComposedTextAttribute)));
 	}
 
-	static int drawComposedText(View view, AttributeSet attr, Graphics g, int x, int y, int p0, int p1)
-			throws BadLocationException {
-		Graphics2D g2d = (Graphics2D) g;
-		AttributedString as = (AttributedString) attr.getAttribute(StyleConstants.ComposedTextAttribute);
-		as.addAttribute(TextAttribute.FONT, g.getFont());
-
-		if (p0 >= p1)
-			return x;
-
-		AttributedCharacterIterator aci = as.getIterator(null, p0, p1);
-		return x + (int) SwingUtilities2.drawString(getJComponent(view), g2d, aci, x, y);
-	}
+//	static int drawComposedText(View view, AttributeSet attr, Graphics g, int x, int y, int p0, int p1)
+//			throws BadLocationException {
+//		Graphics2D g2d = (Graphics2D) g;
+//		AttributedString as = (AttributedString) attr.getAttribute(StyleConstants.ComposedTextAttribute);
+//		as.addAttribute(TextAttribute.FONT, g.getFont());
+//
+//		if (p0 >= p1)
+//			return x;
+//
+//		AttributedCharacterIterator aci = as.getIterator(null, p0, p1);
+//		return x + (int) SwingUtilities2.drawString(getJComponent(view), g2d, aci, x, y);
+//	}
 
 	static JComponent getJComponent(View view) {
 		if (view != null) {

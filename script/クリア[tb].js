@@ -1,1 +1,1 @@
-textArea.setText("");
+text = "";
